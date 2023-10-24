@@ -1,0 +1,49 @@
+{
+  "rules": {
+    "quotes": {
+      ".read": true,
+      ".write": false
+    },
+    "auth": {
+      ".read": true,
+      ".write": false
+    },
+    "user-data": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "all-users": {
+      ".read": true,
+      ".write": true
+    },
+    "user-chats": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "conversation_threads": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "patient_data": {
+      "$email": {
+        ".read": "auth != null",
+        ".write": "$email === root.child('user-data').child(auth.uid).child('email').val()",
+          "goals": {
+            ".write": "auth != null"
+          },
+          "dailycheckin": {
+            ".write": "auth != null"
+          }
+      }
+    },
+    "provider_data": {
+      "$email": {
+        ".read": "$email === root.child('user-data').child(auth.uid).child('email').val() && root.child('user-data').child(auth.uid).child('user_role').val() === 'Provider'",
+        ".write": "$email === root.child('user-data').child(auth.uid).child('email').val() && root.child('user-data').child(auth.uid).child('user_role').val() === 'Provider'"
+      }
+    }
+  }
+}
+

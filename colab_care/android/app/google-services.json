@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "810302382239",
+    "firebase_url": "https://colab-care-default-rtdb.firebaseio.com",
+    "project_id": "colab-care",
+    "storage_bucket": "colab-care.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810302382239:android:1269b53783bf8451c582aa",
+        "android_client_info": {
+          "package_name": "com.example.colab_care"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810302382239-grpcgsh4c06chhmkb65mb2sh24ttqakd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-73aL5qZfg7mgW6nH0Zj9wlDeeAEyUWo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810302382239-d18p92pbs2afs357j8ma2onqc385g8eb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "810302382239-787qr097uiunks13gssn80d90vhj2dvp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "edu.buffalo.collab-care"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

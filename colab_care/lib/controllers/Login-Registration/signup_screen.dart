@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:colab_care/controllers/Home_Screen/home_screen.dart';
 import 'package:colab_care/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,7 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:colab_care/Shared_preferences.dart';
 import 'dart:io';
 import '../../../views/reusable_widgets.dart';
 
@@ -54,9 +52,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       Map<String, dynamic> newUserMap = newUser.toJson();
 
       await _saveUserDataToDatabase(uid, newUserMap);
-      await saveUserDataToSharedPreferences(newUser);
-
-      await _uploadImage(uid); // Upload the image after saving user data
+      await _saveUserDataToAllUsers(newUser, newUserMap);
+      String new_email = convertToHyphenSeparatedEmail(newUser.email);
+      await SharedPreferencesUtils.saveUserDataToSharedPreferences(
+          new_email, newUser.first_name);
+      await _uploadImage(new_email); // Upload the image after saving user data
 
       if (kDebugMode) {
         print("Navigating to HomeScreen");
@@ -73,13 +73,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  Future<void> _uploadImage(String uid) async {
+  Future<void> _uploadImage(String new_email) async {
     if (imageFile != null) {
       try {
+        final imageName = '$new_email\_profile_picture.png';
+
         final storageRef = firebase_storage.FirebaseStorage.instance
             .ref()
             .child('images')
-            .child('$uid.jpg');
+            .child('$imageName');
 
         await storageRef.putFile(imageFile!);
 
@@ -98,10 +100,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  String convertToHyphenSeparatedEmail(String email) {
+    // Replace special characters with hyphen
+    String sanitizedEmail = email.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '-');
+
+    // Convert to lowercase
+    sanitizedEmail = sanitizedEmail.toLowerCase();
+
+    return sanitizedEmail;
+  }
+
   Future<void> _saveUserDataToDatabase(
       String uid, Map<String, dynamic> userData) async {
     final databaseRef = FirebaseDatabase.instance.ref();
     await databaseRef.child('user-data').child(uid).set(userData);
+  }
+
+  Future<void> _saveUserDataToAllUsers(
+      UserData user, Map<String, dynamic> userData) async {
+    final databaseRef = FirebaseDatabase.instance.ref();
+    String new_email = convertToHyphenSeparatedEmail(user.email);
+
+    // Concatenate last_name to first_name and store as name
+    String fullName = '${userData['first_name']} ${userData['last_name']}';
+
+    Map<String, dynamic> userSubset = {
+      'email': new_email,
+      'name': fullName,
+      'token': userData['token'],
+      'user_role': userData['user_role'],
+    };
+
+    await databaseRef.child('all-users').child(new_email).set(userSubset);
   }
 
   final List<String> roleOptions = ["Patient", "Provider"];
@@ -272,21 +302,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
-    if (kDebugMode) {
-      print("done");
-    }
-    if (kDebugMode) {
-      print(statuses[Permission.storage]);
-    }
-
     if (statuses[Permission.storage]!.isGranted &&
         statuses[Permission.camera]!.isGranted) {
-      // ignore: use_build_context_synchronously
       showImagePicker(context);
     } else {
-      if (kDebugMode) {
-        print('no permission provided');
-      }
+      // Handle the case where permissions are denied
+      print('Permissions denied');
     }
   }
 
@@ -381,12 +402,5 @@ class _SignUpScreenState extends State<SignUpScreen> {
         });
       }
     });
-  }
-
-  Future<void> saveUserDataToSharedPreferences(UserData user) async {
-    final prefs = await SharedPreferences.getInstance();
-    final userMap = user.toJson();
-    final userString = jsonEncode(userMap);
-    prefs.setString('user_data', userString);
   }
 }

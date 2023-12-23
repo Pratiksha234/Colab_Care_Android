@@ -1,14 +1,23 @@
-import 'package:colab_care/controllers/Home_Screen/Mindfullness.dart';
-import 'package:colab_care/controllers/Home_Screen/help_screen.dart';
+import 'package:colab_care/Shared_preferences.dart';
+import 'package:colab_care/controllers/Home_Screen/daily_checkin.dart';
+import 'package:colab_care/controllers/Home_Screen/medication.dart';
+import 'package:colab_care/controllers/Home_Screen/messaging.dart';
 import 'package:colab_care/controllers/Home_Screen/profile_screen.dart';
+import 'package:colab_care/controllers/Themes/themes.dart';
+import 'package:intl/intl.dart';
+
+import 'package:colab_care/controllers/Home_Screen/Mindfullness.dart';
+import 'package:colab_care/controllers/Home_Screen/goals_screen.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
@@ -21,6 +30,7 @@ class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
@@ -30,10 +40,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> screens = [
-      HomeScreen(),
+      const HomeScreen(),
       const MindfulnessScreen(),
-      HelpScreen(),
-      // ProfileScreen(),
+      GoalScreen(),
+      const MessagingScreen(),
+      const MedicationScreen(),
     ];
 
     return Scaffold(
@@ -57,7 +68,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.flag),
-            label: 'Help',
+            label: 'Goals',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.message),
@@ -65,16 +76,11 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profile',
+            label: 'Medication',
           ),
         ],
       ),
     );
-  }
-
-  Future<String?> getUserNameFromSharedPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('first_name');
   }
 
   void _onTabTapped(int index) {
@@ -84,26 +90,88 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  String motivationalMessage =
-      "Slow breathing is like an anchor in the midst of an emotional storm: the anchor won't make the storm go away, but it will hold you steady until it passes. -  Russ Harris";
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String motivationalMessage = "Loading..."; // Initial message
+  String firstName = "User"; // Default value
+  String userEmail = '';
+  late ThemeProtocol currentTheme;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+    currentTheme = DefaultTheme();
+  }
+
+  void fetchUserData() async {
+    // Retrieve user data from SharedPreferences
+    Map<String, String> userData =
+        await SharedPreferencesUtils.getUserDataFromSharedPreferences();
+
+    // Update state with user data
+    setState(() {
+      userEmail = userData['new_email'] ?? '@gmail.com';
+      firstName = userData['first_name'] ?? 'User';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('quotes');
+    DateTime now = DateTime.now();
+    String formattedDay = DateFormat('dd').format(now);
+    // print(formattedDay);
+    dbRef.onValue.listen(
+      (event) {
+        setState(() {
+          String specificValue =
+              event.snapshot.child(formattedDay).value.toString();
+
+          motivationalMessage = specificValue;
+        });
+      },
+    );
+    SharedPreferencesUtils.getUserDataFromSharedPreferences();
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: 20.0), // Adjust the padding as needed
-          child: Text('Home'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Text('Home'),
+            ),
+            IconButton(
+              onPressed: () {
+                // Navigate to Profile Screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(
+                  Icons.account_circle), // Add your profile icon here
+            ),
+          ],
         ),
-        backgroundColor: Color.fromRGBO(156, 154, 255, 100), // Start color
+        backgroundColor: const Color.fromRGBO(156, 154, 255, 100),
         titleTextStyle: const TextStyle(
           color: Colors.white,
           fontSize: 28,
         ),
-        centerTitle: false, // Center the title to the left
-        titleSpacing: 0, // Set the title spacing to 0
+        centerTitle: false,
+        titleSpacing: 0,
       ),
       body: Stack(
         children: [
@@ -113,8 +181,8 @@ class HomeScreen extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color.fromRGBO(44, 44, 70, 0.612), // Start color
-                  Color.fromARGB(255, 9, 8, 100), // End color
+                  Color.fromRGBO(44, 44, 70, 0.612),
+                  Color.fromARGB(255, 86, 8, 100),
                 ],
               ),
             ),
@@ -138,11 +206,11 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    '👋 Hello, Pratiksha!',
-                    style: TextStyle(
+                    '👋 Hello, $firstName!',
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                     ),
@@ -152,7 +220,7 @@ class HomeScreen extends StatelessWidget {
                   margin: const EdgeInsets.all(16),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 209, 246, 170),
+                    color: Color.fromARGB(255, 188, 131, 197),
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Text(
@@ -160,29 +228,37 @@ class HomeScreen extends StatelessWidget {
                     style: const TextStyle(fontSize: 17),
                   ),
                 ),
+                // Centered Daily Check-In button
+                Container(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.purple),
+                      // You can adjust other properties here, such as text color, padding, etc.
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DailyCheckInForm()),
+                      );
+                    },
+                    child: const Text('Daily Check-In'),
+                  ),
+                ),
               ],
             ),
           ),
           Positioned(
             bottom: 16,
-            left: 16,
             right: 16,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                FloatingActionButton(
-                  onPressed: () {
-                    // Handle the Daily Check-In button click.
-                  },
-                  child: const Icon(Icons.arrow_upward),
-                ),
-                FloatingActionButton(
-                  onPressed: () {
-                    // Handle the theme button click.
-                  },
-                  child: const Icon(Icons.brush),
-                ),
-              ],
+            child: FloatingActionButton(
+              backgroundColor: Colors.purple,
+              onPressed: () {
+                // Handle the theme button click.
+              },
+              child: const Icon(Icons.brush),
             ),
           ),
         ],

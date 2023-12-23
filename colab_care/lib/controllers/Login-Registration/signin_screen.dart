@@ -1,12 +1,15 @@
-// ignore_for_file: avoid_print
 import 'dart:async';
+import 'package:colab_care/Shared_preferences.dart';
 import 'package:colab_care/controllers/Home_Screen/home_screen.dart';
 import 'package:colab_care/controllers/Login-Registration/reset_password.dart';
 import 'package:colab_care/controllers/Login-Registration/signup_screen.dart';
+import 'package:colab_care/database_access.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:colab_care/views/reusable_widgets.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:colab_care/models/user_model.dart' as user_model;
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -166,25 +169,45 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: 5,
                 ),
                 forgetPassword(context),
-                firebaseUIButton(context, "Sign In", () {
-                  FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
-                          email: _emailTextController.text,
-                          password: _passwordTextController.text)
-                      .then((value) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomePage()));
-                  }).onError((error, stackTrace) {
-                    print("Error ${error.toString()}");
+                firebaseUIButton(context, "Sign In", () async {
+                  try {
+                    UserCredential userCredential =
+                        await FirebaseAuth.instance.signInWithEmailAndPassword(
+                      email: _emailTextController.text,
+                      password: _passwordTextController.text,
+                    );
+                    String? uid = userCredential.user?.uid;
+                    print(uid);
+                    if (userCredential.user != null) {
+                      String? firstName =
+                          await DatabaseUtils.getFirstNameFromDatabase(uid!);
+
+                      if (firstName != null) {
+                        SharedPreferencesUtils.saveUserDataToSharedPreferences(
+                            _emailTextController.text, firstName);
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomePage(),
+                          ),
+                        );
+                      } else {
+                        // Handle case where first name is null
+                        print("First name is null");
+                      }
+                    }
+                  } catch (error) {
+                    print("Error $error");
+                    // ignore: use_build_context_synchronously
                     showCustomDialog(
-                        context,
-                        'Incorrect Credentials',
-                        "Please enter the details again.",
-                        Icons.error_outline,
-                        "Ok");
-                  });
+                      context,
+                      'Incorrect Credentials',
+                      "Please enter the details again.",
+                      Icons.error_outline,
+                      "Ok",
+                    );
+                  }
                 }),
                 signUpOption(),
                 const SizedBox(

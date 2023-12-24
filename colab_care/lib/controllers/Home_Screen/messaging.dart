@@ -1,5 +1,7 @@
 import 'package:colab_care/Shared_preferences.dart';
+import 'package:colab_care/controllers/Themes/theme_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MessagingScreen extends StatelessWidget {
   const MessagingScreen({super.key});
@@ -7,6 +9,7 @@ class MessagingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SharedPreferencesUtils.getUserDataFromSharedPreferences();
+    final theme = Provider.of<ThemeNotifier>(context).currentTheme;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -14,7 +17,7 @@ class MessagingScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: Text('Messaging'),
         ),
-        backgroundColor: const Color.fromRGBO(156, 154, 255, 100),
+        backgroundColor: theme.tabBarBackgroundColor,
         titleTextStyle: const TextStyle(
           color: Colors.white,
           fontSize: 28,

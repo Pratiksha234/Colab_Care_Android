@@ -15,7 +15,7 @@ class ThemeProtocol {
   final TextStyle captionFont;
   final TextStyle headerFont;
   final Color backgroundColor;
-  final ImageProvider backgroundImage;
+  final String backgroundImage;
 
   ThemeProtocol({
     required this.backgroundGradientStart,
@@ -48,58 +48,91 @@ class ThemeManager {
 class DefaultTheme extends ThemeProtocol {
   DefaultTheme()
       : super(
-          backgroundGradientStart: Color.fromRGBO(85, 87, 89, 1.00),
-          backgroundGradientStop: Color.fromRGBO(69, 74, 77, 1.00),
+          backgroundGradientStart: const Color(0xFFFAF1E4),
+          backgroundGradientStop: const Color(0xFFFAF1E4),
           borderColor: Colors.black,
-          buttonTintColor: Colors.black,
+          buttonTintColor: const Color.fromARGB(255, 238, 238, 238),
           tabBarBackgroundColor: Colors.black,
           tabBarSelectedItemColor: Colors.white,
           tabBarUnselectedItemColor: Colors.grey,
           headerColor: Colors.black,
           textColor: Colors.black,
-          navbarFont: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
-          textFont: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
-          captionFont: TextStyle(fontSize: 14, fontWeight: FontWeight.w100),
-          headerFont: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          navbarFont: const TextStyle(
+              fontSize: 34, fontWeight: FontWeight.bold, color: Colors.black),
+          textFont: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+          captionFont:
+              const TextStyle(fontSize: 14, fontWeight: FontWeight.w100),
+          headerFont: const TextStyle(
+              fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black),
           backgroundColor: Colors.white,
-          backgroundImage: AssetImage("assets/original.jpg"),
+          backgroundImage: "assets/default.jpg",
         );
 }
 
 class OceanicHarmonyTheme extends ThemeProtocol {
   OceanicHarmonyTheme()
       : super(
-          backgroundGradientStart: Color.fromRGBO(76, 87, 86, 1.00),
-          backgroundGradientStop: Color.fromRGBO(64, 77, 81, 1.00),
-          borderColor: Color.fromRGBO(07, 42, 48, 1.00),
-          buttonTintColor: Color.fromRGBO(07, 42, 48, 1.00),
-          tabBarBackgroundColor: Color.fromRGBO(07, 42, 48, 1.00),
+          backgroundGradientStart: const Color.fromRGBO(203, 228, 222, 1),
+          backgroundGradientStop: const Color.fromRGBO(203, 228, 222, 1),
+          borderColor: const Color.fromRGBO(71, 223, 221, 1),
+          buttonTintColor: const Color.fromARGB(255, 95, 168, 192),
+          tabBarBackgroundColor: const Color.fromARGB(255, 15, 90, 115),
           tabBarSelectedItemColor: Colors.white,
-          tabBarUnselectedItemColor: Color.fromRGBO(93, 90, 78, 1.00),
-          headerColor: Color.fromRGBO(07, 42, 48, 1.00),
-          textColor: Color.fromRGBO(07, 42, 48, 1.00),
-          navbarFont: TextStyle(
+          tabBarUnselectedItemColor: Colors.grey.shade400,
+          headerColor: const Color.fromRGBO(14, 131, 136, 1),
+          textColor: const Color.fromRGBO(14, 131, 136, 1),
+          navbarFont: const TextStyle(
             fontFamily: "Avenir-Heavy",
             fontSize: 34,
           ),
-          textFont: TextStyle(
+          textFont: const TextStyle(
             fontFamily: "Avenir-Light",
             fontSize: 16,
+            color: Color.fromRGBO(14, 131, 136, 1),
           ),
-          captionFont: TextStyle(
+          captionFont: const TextStyle(
             fontFamily: "Avenir-Light",
             fontSize: 14,
           ),
-          headerFont: TextStyle(
+          headerFont: const TextStyle(
             fontFamily: "Avenir-Medium",
             fontSize: 18,
+            color: Color.fromRGBO(14, 131, 136, 1),
           ),
-          backgroundColor: Color.fromRGBO(76, 87, 86, 1.00),
-          backgroundImage: AssetImage("assets/oceanic.jpg"),
+          backgroundColor: const Color.fromARGB(255, 161, 192, 189),
+          backgroundImage: "assets/oceanic.jpg",
         );
 }
 
-// Add similar classes for other themes...
-
-// Example of usage:
-
+class BurgundyTwilightTheme extends ThemeProtocol {
+  BurgundyTwilightTheme()
+      : super(
+          backgroundGradientStart: const Color(0xFFE7CBCB),
+          backgroundGradientStop: const Color(0xFFE7CBCB),
+          borderColor: const Color.fromRGBO(71, 223, 221, 1),
+          buttonTintColor: const Color.fromARGB(255, 123, 153, 201),
+          tabBarBackgroundColor: const Color.fromRGBO(07, 42, 48, 1.00),
+          tabBarSelectedItemColor: Colors.white,
+          tabBarUnselectedItemColor: const Color.fromRGBO(195, 182, 132, 1),
+          headerColor: const Color.fromRGBO(198, 212, 215, 1),
+          textColor: const Color.fromRGBO(07, 42, 48, 1.00),
+          navbarFont: const TextStyle(
+            fontFamily: "Avenir-Heavy",
+            fontSize: 34,
+          ),
+          textFont: const TextStyle(
+            fontFamily: "Avenir-Light",
+            fontSize: 16,
+          ),
+          captionFont: const TextStyle(
+            fontFamily: "Avenir-Light",
+            fontSize: 14,
+          ),
+          headerFont: const TextStyle(
+            fontFamily: "Avenir-Medium",
+            fontSize: 18,
+          ),
+          backgroundColor: const Color.fromRGBO(76, 87, 86, 1.00),
+          backgroundImage: "assets/burgundy.jpg",
+        );
+}

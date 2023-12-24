@@ -1,4 +1,6 @@
+import 'package:colab_care/controllers/Themes/theme_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MindfulnessScreen extends StatelessWidget {
   const MindfulnessScreen({Key? key});
@@ -16,7 +18,7 @@ class MindfulnessScreen extends StatelessWidget {
       '3 Min Breathing Space',
       'Walking Meditation',
     ];
-
+    final theme = Provider.of<ThemeNotifier>(context).currentTheme;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -24,7 +26,7 @@ class MindfulnessScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: Text('Mindfulness'),
         ),
-        backgroundColor: const Color.fromRGBO(156, 154, 255, 100),
+        backgroundColor: theme.tabBarBackgroundColor,
         titleTextStyle: const TextStyle(
           color: Colors.white,
           fontSize: 28,
@@ -34,7 +36,7 @@ class MindfulnessScreen extends StatelessWidget {
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
-        color: const Color.fromRGBO(156, 154, 255, 100),
+        color: theme.backgroundGradientStart,
         child: ListView.builder(
           itemCount: 9,
           itemBuilder: (context, index) {

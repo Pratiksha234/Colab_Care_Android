@@ -1,5 +1,7 @@
+import 'package:colab_care/controllers/Themes/theme_manager.dart';
 import 'package:colab_care/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MedicationScreen extends StatelessWidget {
   const MedicationScreen({super.key});
@@ -10,7 +12,7 @@ class MedicationScreen extends StatelessWidget {
     // you should not call it directly without awaiting it or handling it properly in a FutureBuilder or similar.
     // For the purpose of this example, we are calling it directly, but in a real app, you should handle it asynchronously.
     SharedPreferencesUtils.getUserDataFromSharedPreferences();
-
+    final theme = Provider.of<ThemeNotifier>(context).currentTheme;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -18,7 +20,7 @@ class MedicationScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: Text('Add Medicine'),
         ),
-        backgroundColor: const Color.fromRGBO(156, 154, 255, 100),
+        backgroundColor: theme.tabBarBackgroundColor,
         titleTextStyle: const TextStyle(
           color: Colors.white,
           fontSize: 28,

@@ -1,8 +1,12 @@
 import 'package:colab_care/controllers/Home_Screen/home_screen.dart';
+import 'package:colab_care/controllers/Home_Screen/tab_bar.dart';
 import 'package:colab_care/controllers/Login-Registration/signin_screen.dart';
+import 'package:colab_care/controllers/Themes/theme_manager.dart';
+import 'package:colab_care/controllers/Themes/themes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 // import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
@@ -17,9 +21,14 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: []);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeNotifier(DefaultTheme()),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -27,11 +36,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+    final theme = themeNotifier.currentTheme;
+
     return MaterialApp(
       title: 'Colab Care',
       navigatorKey: navigatorKey,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: theme.backgroundGradientStart,
+        backgroundColor: theme.backgroundColor,
       ),
       routes: {
         '/home': (context) => const HomePage(),

@@ -1,7 +1,10 @@
 import 'package:colab_care/controllers/Home_Screen/Mindfullness.dart';
 import 'package:colab_care/controllers/Home_Screen/home_screen.dart';
+import 'package:colab_care/controllers/Home_Screen/tab_bar.dart';
+import 'package:colab_care/controllers/Themes/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class DailyCheckInForm extends StatefulWidget {
   const DailyCheckInForm({Key? key}) : super(key: key);
@@ -75,10 +78,10 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
       void Function(String?) onChanged) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-      margin: EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 168, 130, 174),
+        color: const Color.fromARGB(255, 168, 130, 174),
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(color: Colors.grey),
       ),
@@ -91,7 +94,7 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
               value: item,
               child: Text(
                 item,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18.0,
                   color: Colors.black,
                 ),
@@ -152,14 +155,15 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeNotifier>(context).currentTheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daily Check-In Form'),
-        backgroundColor: Color.fromARGB(255, 161, 127, 167),
-      ),
+          title: const Text('Daily Check-In Form'),
+          backgroundColor: theme.backgroundColor),
       body: Center(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -217,10 +221,10 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
                   _medicationTaken = value;
                 });
               }),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: isFormValid() ? submitForm : null,
-                child: Text('Submit'),
+                child: const Text('Submit'),
                 style: ElevatedButton.styleFrom(
                   primary: isFormValid()
                       ? Colors.purple
@@ -240,21 +244,21 @@ class SuggestedExercisesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Suggestions'),
+        title: const Text('Suggestions'),
         automaticallyImplyLeading: false,
-        backgroundColor: Color.fromARGB(255, 172, 131, 180),
+        backgroundColor: const Color.fromARGB(255, 172, 131, 180),
       ),
       body: Center(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'Based on all of your responses to the daily check-in questions, we recommend you visit the mindfulness tab to listen to different exercises that may provide strategies to manage your feelings,thoughts and stress. ',
                 style: TextStyle(fontSize: 18.0),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: () {
                   // Navigate to the home page
@@ -263,12 +267,12 @@ class SuggestedExercisesScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => const HomePage()),
                   );
                 },
-                child: Text('Close'),
+                child: const Text('Close'),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue,
                 ),
               ),
-              SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
             ],
           ),
         ),
@@ -282,28 +286,28 @@ class NoSuggestionsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Suggestions'),
-        backgroundColor: Color.fromARGB(255, 93, 56, 100),
+        title: const Text('Suggestions'),
+        backgroundColor: const Color.fromARGB(255, 93, 56, 100),
       ),
       body: Center(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'No suggestions at this moment, thank you for answering the daily check-in form. Have a great day!',
                 style: TextStyle(fontSize: 18.0),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => const HomePage()),
                   );
                 },
-                child: Text('Go to Home'),
+                child: const Text('Go to Home'),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue,
                 ),

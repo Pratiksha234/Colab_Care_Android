@@ -7,6 +7,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:colab_care/controllers/Home_Screen/reminder_provider.dart';
+import 'package:realm/realm.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 // import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
@@ -20,12 +26,32 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  final settingsAndroid = const AndroidInitializationSettings('@mipmap/ic_launcher');
+  final settingsIOS = IOSInitializationSettings(
+    requestSoundPermission: false,
+    requestBadgePermission: false,
+    requestAlertPermission: false,
+    onDidReceiveLocalNotification:
+        (int id, String? title, String? body, String? payload) async {},
+  );
+  final initializationSettings =
+      InitializationSettings(android: settingsAndroid, iOS: settingsIOS);
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onSelectNotification: (String? payload) async {},
+  );
+
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeNotifier(DefaultTheme()),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => RemindersProvider()),
+        ChangeNotifierProvider.value(
+          value:
+              ThemeNotifier(DefaultTheme()), // Provide the ThemeNotifier here
+        ),
+      ],
       child: const MyApp(),
     ),
   );
@@ -49,7 +75,11 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => const HomePage(),
       },
-      home: const SignInScreen(),
+      home: const SafeArea(
+        top: false,
+        bottom: false,
+        child: SignInScreen(),
+      ),
     );
   }
 }
@@ -63,10 +93,13 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Colab Care'),
       ),
-      body: const Center(
-        child: Text(
-          'Hello, Flutter!',
-          style: TextStyle(fontSize: 24),
+      body: const SafeArea(
+        minimum: EdgeInsets.all(16.0),
+        child: Center(
+          child: Text(
+            'Hello, Flutter!',
+            style: TextStyle(fontSize: 24),
+          ),
         ),
       ),
     );

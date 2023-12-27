@@ -1,6 +1,8 @@
+import 'package:colab_care/controllers/Themes/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:colab_care/Shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -46,13 +48,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeNotifier>(context).currentTheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: Text('Profile'),
         ),
-        backgroundColor: const Color.fromRGBO(156, 154, 255, 100),
+        backgroundColor: theme.tabBarBackgroundColor,
         titleTextStyle: const TextStyle(
           color: Colors.white,
           fontSize: 28,
@@ -62,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             onPressed: logout,
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
           ),
         ],
       ),
@@ -74,22 +78,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 50,
+                backgroundColor: theme.tabBarBackgroundColor,
                 backgroundImage: profilePictureURL.isNotEmpty
                     ? NetworkImage(profilePictureURL)
                     : null,
                 child: profilePictureURL.isEmpty
-                    ? Icon(Icons.person, size: 50, color: Colors.white)
+                    ? const Icon(Icons.person, size: 50, color: Colors.white)
                     : null,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 'Name: $userName',
-                style: TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 18),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 'Email: $userEmail',
-                style: TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 18),
               ),
             ],
           ),

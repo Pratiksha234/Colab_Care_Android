@@ -76,14 +76,16 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
 
   Widget buildDropdown(List<String> items, String? selectedItem,
       void Function(String?) onChanged) {
+    final theme = Provider.of<ThemeNotifier>(context).currentTheme;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 168, 130, 174),
+        color: theme.backgroundColor,
         borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(color: Colors.grey),
+        border: Border.all(color: theme.borderColor),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
@@ -159,8 +161,12 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
 
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Daily Check-In Form'),
-          backgroundColor: theme.backgroundColor),
+          automaticallyImplyLeading: false,
+          title: Text(
+            'Daily Check-In Form',
+            style: theme.navbarFont,
+          ),
+          backgroundColor: theme.backgroundGradientStart),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -224,12 +230,12 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: isFormValid() ? submitForm : null,
-                child: const Text('Submit'),
                 style: ElevatedButton.styleFrom(
                   primary: isFormValid()
-                      ? Colors.purple
-                      : Colors.grey, // Disable button color
+                      ? theme.backgroundColor
+                      : theme.buttonTintColor, // Disable button color
                 ),
+                child: const Text('Submit'),
               ),
             ],
           ),
@@ -240,13 +246,17 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
 }
 
 class SuggestedExercisesScreen extends StatelessWidget {
+  const SuggestedExercisesScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeNotifier>(context).currentTheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Suggestions'),
         automaticallyImplyLeading: false,
-        backgroundColor: const Color.fromARGB(255, 172, 131, 180),
+        backgroundColor: theme.backgroundColor,
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -282,6 +292,8 @@ class SuggestedExercisesScreen extends StatelessWidget {
 }
 
 class NoSuggestionsScreen extends StatelessWidget {
+  const NoSuggestionsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize:
-            const Size.fromHeight(100.0), // Set your desired height here
+            const Size.fromHeight(80.0), // Set your desired height here
         child: AppBar(
           automaticallyImplyLeading: false,
           title: Row(
@@ -64,9 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(
-                    top: 10.0,
+                    top: 30.0,
                     left: 20.0,
-                    bottom: 8.0), // Adjust padding as needed
+                    bottom: 0.0), // Adjust padding as needed
                 child: Align(
                   alignment: Alignment.bottomLeft,
                   child: Text(
@@ -77,9 +77,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.only(top: 0.0, left: 20.0, bottom: 8.0),
+                    const EdgeInsets.only(top: 25.0, left: 20.0, bottom: 0.0),
                 child: IconButton(
                   icon: const Icon(Icons.account_circle),
+                  iconSize: 35,
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -148,24 +149,42 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 // Centered Daily Check-In button
-                Container(
-                  alignment: Alignment.center,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          theme.buttonTintColor),
-                      // You can adjust other properties here, such as text color, padding, etc.
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const DailyCheckInForm()),
-                      );
-                    },
-                    child: Text(
-                      'Daily Check-In',
-                      style: theme.textFont,
+                Center(
+                  child: Container(
+                    width: 250, // Set the width you desire
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            theme.buttonTintColor),
+                        // You can adjust other properties here, such as text color, padding, etc.
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const DailyCheckInForm()),
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.upload_outlined,
+                            color: Colors.white,
+                          ), // Add the upload icon here
+                          SizedBox(
+                              width:
+                                  8), // Add some spacing between the icon and text
+                          Text(
+                            'Daily Check-In',
+                            style: TextStyle(
+                              fontFamily: "TrebuchetMS",
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -179,11 +198,13 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (context) => const ThemeSelectionScreen()),
+            MaterialPageRoute(builder: (context) => ThemeSelectionScreen()),
           );
         },
-        child: const Icon(Icons.brush),
+        child: const Icon(
+          Icons.brush,
+          color: Colors.white,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

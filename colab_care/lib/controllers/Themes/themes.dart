@@ -51,7 +51,7 @@ class DefaultTheme extends ThemeProtocol {
           backgroundGradientStart: const Color(0xFFFAF1E4),
           backgroundGradientStop: const Color(0xFFFAF1E4),
           borderColor: Colors.black,
-          buttonTintColor: const Color.fromARGB(255, 238, 238, 238),
+          buttonTintColor: Colors.black,
           tabBarBackgroundColor: Colors.black,
           tabBarSelectedItemColor: Colors.white,
           tabBarUnselectedItemColor: Colors.grey,
@@ -63,7 +63,7 @@ class DefaultTheme extends ThemeProtocol {
           captionFont:
               const TextStyle(fontSize: 14, fontWeight: FontWeight.w100),
           headerFont: const TextStyle(
-              fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black),
+              fontSize: 20, fontWeight: FontWeight.w500, color: Colors.black),
           backgroundColor: Colors.white,
           backgroundImage: "assets/default.jpg",
         );
@@ -96,7 +96,7 @@ class OceanicHarmonyTheme extends ThemeProtocol {
           ),
           headerFont: const TextStyle(
             fontFamily: "Avenir-Medium",
-            fontSize: 18,
+            fontSize: 20,
             color: Color.fromRGBO(14, 131, 136, 1),
           ),
           backgroundColor: const Color.fromARGB(255, 161, 192, 189),
@@ -107,32 +107,165 @@ class OceanicHarmonyTheme extends ThemeProtocol {
 class BurgundyTwilightTheme extends ThemeProtocol {
   BurgundyTwilightTheme()
       : super(
-          backgroundGradientStart: const Color(0xFFE7CBCB),
-          backgroundGradientStop: const Color(0xFFE7CBCB),
-          borderColor: const Color.fromRGBO(71, 223, 221, 1),
-          buttonTintColor: const Color.fromARGB(255, 123, 153, 201),
-          tabBarBackgroundColor: const Color.fromRGBO(07, 42, 48, 1.00),
+          backgroundGradientStart: const Color.fromRGBO(231, 204, 204, 1),
+          backgroundGradientStop: const Color.fromRGBO(207, 181, 166, 1),
+          borderColor: Color.fromARGB(255, 188, 160, 167),
+          buttonTintColor: const Color.fromARGB(255, 153, 97, 123),
+          tabBarBackgroundColor: const Color.fromARGB(255, 100, 56, 66),
           tabBarSelectedItemColor: Colors.white,
-          tabBarUnselectedItemColor: const Color.fromRGBO(195, 182, 132, 1),
-          headerColor: const Color.fromRGBO(198, 212, 215, 1),
-          textColor: const Color.fromRGBO(07, 42, 48, 1.00),
+          tabBarUnselectedItemColor: Colors.grey.shade400,
+          headerColor: const Color.fromRGBO(153, 97, 123, 1),
+          textColor: const Color.fromRGBO(153, 97, 123, 1),
           navbarFont: const TextStyle(
-            fontFamily: "Avenir-Heavy",
+            fontFamily: "HelveticaNeue-CondensedBold",
             fontSize: 34,
           ),
           textFont: const TextStyle(
-            fontFamily: "Avenir-Light",
+            fontFamily: "HelveticaNeue-Light",
             fontSize: 16,
           ),
           captionFont: const TextStyle(
-            fontFamily: "Avenir-Light",
+            fontFamily: "HelveticaNeue-Light",
             fontSize: 14,
           ),
           headerFont: const TextStyle(
-            fontFamily: "Avenir-Medium",
-            fontSize: 18,
+            fontFamily: "HelveticaNeue",
+            fontSize: 20,
+            color: Color.fromARGB(255, 100, 56, 66),
           ),
-          backgroundColor: const Color.fromRGBO(76, 87, 86, 1.00),
+          backgroundColor: const Color.fromRGBO(231, 204, 204, 1),
           backgroundImage: "assets/burgundy.jpg",
+        );
+}
+
+class SoothingFoliageTheme extends ThemeProtocol {
+  SoothingFoliageTheme()
+      : super(
+          backgroundGradientStart: const Color.fromRGBO(238, 242, 214, 1),
+          backgroundGradientStop: const Color.fromRGBO(173, 204, 177, 1),
+          borderColor: const Color.fromRGBO(64, 82, 59, 1),
+          buttonTintColor: const Color.fromRGBO(98, 153, 102, 1),
+          tabBarBackgroundColor: const Color.fromRGBO(64, 82, 59, 1),
+          tabBarSelectedItemColor: const Color.fromRGBO(238, 242, 214, 1),
+          tabBarUnselectedItemColor: const Color.fromRGBO(158, 191, 140, 1),
+          headerColor: const Color.fromRGBO(64, 82, 59, 1),
+          textColor: const Color.fromRGBO(98, 153, 102, 1),
+          navbarFont: const TextStyle(
+            fontFamily: "AvenirNext-Bold",
+            fontSize: 34,
+          ),
+          textFont: const TextStyle(
+            fontFamily: "AvenirNext-Regular",
+            fontSize: 16,
+          ),
+          captionFont: const TextStyle(
+            fontFamily: "AvenirNext-Regular",
+            fontSize: 14,
+          ),
+          headerFont: const TextStyle(
+            fontFamily: "AvenirNext-DemiBold",
+            fontSize: 20,
+          ),
+          backgroundColor: const Color.fromRGBO(238, 242, 214, 1),
+          backgroundImage: "assets/green.jpg",
+        );
+}
+
+class VioletDawnTheme extends ThemeProtocol {
+  VioletDawnTheme()
+      : super(
+          backgroundGradientStart: const Color.fromRGBO(222, 212, 242, 1),
+          backgroundGradientStop: const Color.fromRGBO(223, 215, 242, 1),
+          borderColor: const Color.fromRGBO(100, 92, 186, 1),
+          buttonTintColor: const Color.fromRGBO(162, 132, 219, 1),
+          tabBarBackgroundColor: const Color.fromRGBO(100, 92, 186, 1),
+          tabBarSelectedItemColor: Colors.white,
+          tabBarUnselectedItemColor: const Color.fromRGBO(192, 171, 228, 1),
+          headerColor: Color.fromARGB(255, 29, 29, 32),
+          textColor: const Color.fromRGBO(100, 92, 186, 1),
+          navbarFont: const TextStyle(
+            fontFamily: "Verdana-Bold",
+            fontSize: 30,
+          ),
+          textFont: const TextStyle(
+            fontFamily: "Verdana",
+            fontSize: 14,
+          ),
+          captionFont: const TextStyle(
+            fontFamily: "Verdana",
+            fontSize: 12,
+          ),
+          headerFont: const TextStyle(
+            fontFamily: "Verdana-Bold",
+            fontSize: 20,
+          ),
+          backgroundColor: const Color.fromRGBO(207, 194, 238, 1),
+          backgroundImage: "assets/purple.jpg",
+        );
+}
+
+class RetroTheme extends ThemeProtocol {
+  RetroTheme()
+      : super(
+          backgroundGradientStart: const Color.fromRGBO(204, 214, 197, 1),
+          backgroundGradientStop: const Color.fromRGBO(204, 214, 197, 1),
+          borderColor: const Color.fromRGBO(125, 151, 172, 1),
+          buttonTintColor: const Color.fromRGBO(125, 151, 172, 1),
+          tabBarBackgroundColor: const Color.fromRGBO(125, 151, 172, 1),
+          tabBarSelectedItemColor: Colors.white,
+          tabBarUnselectedItemColor: const Color.fromRGBO(238, 199, 176, 1),
+          headerColor: const Color.fromRGBO(84, 113, 131, 1),
+          textColor: const Color.fromRGBO(84, 113, 131, 1),
+          navbarFont: const TextStyle(
+            fontSize: 34,
+            fontWeight: FontWeight.bold,
+          ),
+          textFont: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w100,
+          ),
+          captionFont: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w100,
+          ),
+          headerFont: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
+          backgroundColor: const Color.fromRGBO(194, 194, 194, 1),
+          backgroundImage: "assets/retro.jpg",
+        );
+}
+
+class SoftSandsTheme extends ThemeProtocol {
+  SoftSandsTheme()
+      : super(
+          backgroundGradientStart: const Color.fromRGBO(250, 250, 232, 1),
+          backgroundGradientStop: const Color.fromRGBO(239, 205, 182, 1),
+          borderColor: const Color.fromRGBO(252, 112, 122, 1),
+          buttonTintColor: const Color.fromRGBO(252, 112, 122, 1),
+          tabBarBackgroundColor: const Color.fromRGBO(252, 112, 122, 1),
+          tabBarSelectedItemColor: const Color.fromRGBO(240, 238, 213, 1),
+          tabBarUnselectedItemColor: const Color.fromRGBO(250, 250, 232, 1),
+          headerColor: const Color.fromRGBO(252, 112, 122, 1),
+          textColor: const Color.fromRGBO(252, 112, 122, 1),
+          navbarFont: const TextStyle(
+            fontFamily: "TrebuchetMS-Bold",
+            fontSize: 34,
+          ),
+          textFont: const TextStyle(
+            fontFamily: "TrebuchetMS",
+            fontSize: 16,
+          ),
+          captionFont: const TextStyle(
+            fontFamily: "TrebuchetMS",
+            fontSize: 14,
+          ),
+          headerFont: const TextStyle(
+            fontFamily: "TrebuchetMS-Bold",
+            fontSize: 20,
+          ),
+          backgroundColor: const Color.fromRGBO(250, 250, 232, 1),
+          backgroundImage: "assets/softsands.jpg",
         );
 }

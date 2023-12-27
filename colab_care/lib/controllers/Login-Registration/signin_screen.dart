@@ -1,16 +1,13 @@
 import 'dart:async';
 import 'package:colab_care/Shared_preferences.dart';
-import 'package:colab_care/controllers/Home_Screen/home_screen.dart';
 import 'package:colab_care/controllers/Home_Screen/tab_bar.dart';
 import 'package:colab_care/controllers/Login-Registration/reset_password.dart';
 import 'package:colab_care/controllers/Login-Registration/signup_screen.dart';
 import 'package:colab_care/database_access.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:colab_care/views/reusable_widgets.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:colab_care/models/user_model.dart' as user_model;
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -128,93 +125,99 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          color: pastelColors[currentIndex],
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-                20, MediaQuery.of(context).size.height * 0.2, 20, 0),
-            child: Column(
-              children: <Widget>[
-                const SizedBox(height: 20),
-                Icon(
-                  iconsList[currentIndex],
-                  size: 64,
-                  color: Colors.black,
-                ),
-                const SizedBox(height: 18),
-                Text(
-                  currentMessage,
-                  style: GoogleFonts.openSans(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
+      extendBodyBehindAppBar: false,
+      body: SafeArea(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            color: pastelColors[currentIndex],
+          ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                  20, MediaQuery.of(context).size.height * 0.2, 20, 0),
+              child: Column(
+                children: <Widget>[
+                  const SizedBox(height: 20),
+                  Icon(
+                    iconsList[currentIndex],
+                    size: 64,
                     color: Colors.black,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                reusableTextField("Enter Name or Email", Icons.person_outline,
-                    false, _emailTextController),
-                const SizedBox(
-                  height: 20,
-                ),
-                reusableTextFieldWithPasswordToggle("Enter Password",
-                    Icons.lock_outline, _passwordTextController),
-                const SizedBox(
-                  height: 5,
-                ),
-                forgetPassword(context),
-                firebaseUIButton(context, "Sign In", () async {
-                  try {
-                    UserCredential userCredential =
-                        await FirebaseAuth.instance.signInWithEmailAndPassword(
-                      email: _emailTextController.text,
-                      password: _passwordTextController.text,
-                    );
-                    String? uid = userCredential.user?.uid;
-                    print(uid);
-                    if (userCredential.user != null) {
-                      String? firstName =
-                          await DatabaseUtils.getFirstNameFromDatabase(uid!);
+                  const SizedBox(height: 18),
+                  Text(
+                    currentMessage,
+                    style: GoogleFonts.openSans(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  reusableTextField("Enter Name or Email", Icons.person_outline,
+                      false, _emailTextController),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  reusableTextFieldWithPasswordToggle("Enter Password",
+                      Icons.lock_outline, _passwordTextController),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  forgetPassword(context),
+                  firebaseUIButton(context, "Sign In", () async {
+                    try {
+                      UserCredential userCredential = await FirebaseAuth
+                          .instance
+                          .signInWithEmailAndPassword(
+                        email: _emailTextController.text,
+                        password: _passwordTextController.text,
+                      );
+                      String? uid = userCredential.user?.uid;
+                      print(uid);
+                      if (userCredential.user != null) {
+                        String? firstName =
+                            await DatabaseUtils.getFirstNameFromDatabase(uid!);
 
-                      if (firstName != null) {
-                        SharedPreferencesUtils.saveUserDataToSharedPreferences(
-                            _emailTextController.text, firstName);
+                        if (firstName != null) {
+                          SharedPreferencesUtils
+                              .saveUserDataToSharedPreferences(
+                                  _emailTextController.text, firstName);
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomePage(),
-                          ),
-                        );
-                      } else {
-                        // Handle case where first name is null
-                        print("First name is null");
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomePage(),
+                            ),
+                          );
+                        } else {
+                          // Handle case where first name is null
+                          print("First name is null");
+                        }
                       }
+                    } catch (error) {
+                      print("Error $error");
+                      // ignore: use_build_context_synchronously
+                      showCustomDialog(
+                        context,
+                        'Incorrect Credentials',
+                        "Please enter the details again.",
+                        Icons.error_outline,
+                        "Ok",
+                      );
                     }
-                  } catch (error) {
-                    print("Error $error");
-                    // ignore: use_build_context_synchronously
-                    showCustomDialog(
-                      context,
-                      'Incorrect Credentials',
-                      "Please enter the details again.",
-                      Icons.error_outline,
-                      "Ok",
-                    );
-                  }
-                }),
-                signUpOption(),
-                const SizedBox(
-                  height: 60,
-                ),
-              ],
+                  }),
+                  signUpOption(),
+                  const SizedBox(
+                    height: 60,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

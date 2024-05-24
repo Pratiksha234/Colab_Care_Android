@@ -56,8 +56,55 @@ Widget reusableRoleDropdown(
   );
 }
 
-Widget reusableTextField(String text, IconData icon, bool isPasswordType,
-    TextEditingController controller) {
+Widget reusablePasswordField(
+  String hintText,
+  IconData icon,
+  bool obscureText,
+  TextEditingController controller, {
+  Widget? suffixIcon,
+}) {
+  return Container(
+    decoration: BoxDecoration(
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 2,
+          blurRadius: 5,
+          offset: const Offset(0, 3),
+        ),
+      ],
+      borderRadius: BorderRadius.circular(30.0),
+    ),
+    child: TextField(
+      obscureText: obscureText,
+      controller: controller,
+      cursorColor: Colors.black,
+      style: const TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+        prefixIcon: Icon(
+          icon,
+          color: Colors.black,
+        ),
+        labelText: hintText,
+        labelStyle: const TextStyle(color: Colors.black),
+        suffixIcon: suffixIcon,
+        filled: true,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget reusableTextField(
+  String text,
+  IconData icon,
+  TextEditingController controller,
+) {
   return Container(
     decoration: BoxDecoration(
       boxShadow: [
@@ -72,9 +119,6 @@ Widget reusableTextField(String text, IconData icon, bool isPasswordType,
     ),
     child: TextField(
       controller: controller,
-      obscureText: isPasswordType,
-      enableSuggestions: !isPasswordType,
-      autocorrect: !isPasswordType,
       cursorColor: Colors.black,
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
@@ -92,9 +136,6 @@ Widget reusableTextField(String text, IconData icon, bool isPasswordType,
           borderSide: const BorderSide(width: 0, style: BorderStyle.none),
         ),
       ),
-      keyboardType: isPasswordType
-          ? TextInputType.visiblePassword
-          : TextInputType.emailAddress,
     ),
   );
 }
@@ -170,61 +211,5 @@ void showCustomDialog(
         ],
       );
     },
-  );
-}
-
-Widget reusableTextFieldWithPasswordToggle(
-  String text,
-  IconData icon,
-  TextEditingController controller,
-) {
-  bool isPasswordVisible = false; // Keep track of password visibility
-  return Container(
-    decoration: BoxDecoration(
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.5),
-          spreadRadius: 2,
-          blurRadius: 5,
-          offset: const Offset(0, 3),
-        ),
-      ],
-      borderRadius: BorderRadius.circular(30.0),
-    ),
-    child: TextField(
-      controller: controller,
-      obscureText: !isPasswordVisible, // Toggle password visibility
-      enableSuggestions: !isPasswordVisible,
-      autocorrect: !isPasswordVisible,
-      cursorColor: Colors.black,
-      style: const TextStyle(color: Colors.black),
-      decoration: InputDecoration(
-        prefixIcon: Icon(
-          icon,
-          color: Colors.black,
-        ),
-        labelText: text,
-        labelStyle: const TextStyle(color: Colors.black),
-        filled: true,
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
-          borderSide: const BorderSide(width: 0, style: BorderStyle.none),
-        ),
-        suffixIcon: GestureDetector(
-          // onTap: () {
-          //   setState(() {
-          //     isPasswordVisible = !isPasswordVisible;
-          //   });
-          // },
-          child: Icon(
-            isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-            color: Colors.black,
-          ),
-        ),
-      ),
-      keyboardType: TextInputType.emailAddress,
-    ),
   );
 }

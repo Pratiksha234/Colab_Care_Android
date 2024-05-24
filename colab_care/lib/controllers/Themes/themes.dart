@@ -65,7 +65,7 @@ class DefaultTheme extends ThemeProtocol {
           headerFont: const TextStyle(
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.black),
           backgroundColor: Colors.white,
-          backgroundImage: "assets/default.jpg",
+          backgroundImage: "assets/theme/default.jpg",
         );
 }
 
@@ -84,6 +84,7 @@ class OceanicHarmonyTheme extends ThemeProtocol {
           navbarFont: const TextStyle(
             fontFamily: "Avenir-Heavy",
             fontSize: 34,
+            color: Color.fromARGB(255, 15, 90, 115),
           ),
           textFont: const TextStyle(
             fontFamily: "Avenir-Light",
@@ -100,7 +101,7 @@ class OceanicHarmonyTheme extends ThemeProtocol {
             color: Color.fromRGBO(14, 131, 136, 1),
           ),
           backgroundColor: const Color.fromARGB(255, 161, 192, 189),
-          backgroundImage: "assets/oceanic.jpg",
+          backgroundImage: "assets/theme/oceanic.jpg",
         );
 }
 
@@ -119,6 +120,7 @@ class BurgundyTwilightTheme extends ThemeProtocol {
           navbarFont: const TextStyle(
             fontFamily: "HelveticaNeue-CondensedBold",
             fontSize: 34,
+            color: Colors.black,
           ),
           textFont: const TextStyle(
             fontFamily: "HelveticaNeue-Light",
@@ -134,7 +136,7 @@ class BurgundyTwilightTheme extends ThemeProtocol {
             color: Color.fromARGB(255, 100, 56, 66),
           ),
           backgroundColor: const Color.fromRGBO(231, 204, 204, 1),
-          backgroundImage: "assets/burgundy.jpg",
+          backgroundImage: "assets/theme/burgundy.jpg",
         );
 }
 
@@ -153,10 +155,12 @@ class SoothingFoliageTheme extends ThemeProtocol {
           navbarFont: const TextStyle(
             fontFamily: "AvenirNext-Bold",
             fontSize: 34,
+            color: Colors.black,
           ),
           textFont: const TextStyle(
             fontFamily: "AvenirNext-Regular",
             fontSize: 16,
+            color: Colors.white,
           ),
           captionFont: const TextStyle(
             fontFamily: "AvenirNext-Regular",
@@ -165,9 +169,10 @@ class SoothingFoliageTheme extends ThemeProtocol {
           headerFont: const TextStyle(
             fontFamily: "AvenirNext-DemiBold",
             fontSize: 20,
+            color: Color.fromRGBO(64, 82, 59, 1),
           ),
           backgroundColor: const Color.fromRGBO(238, 242, 214, 1),
-          backgroundImage: "assets/green.jpg",
+          backgroundImage: "assets/theme/green.jpg",
         );
 }
 
@@ -200,7 +205,7 @@ class VioletDawnTheme extends ThemeProtocol {
             fontSize: 20,
           ),
           backgroundColor: const Color.fromRGBO(207, 194, 238, 1),
-          backgroundImage: "assets/purple.jpg",
+          backgroundImage: "assets/theme/purple.jpg",
         );
 }
 
@@ -219,10 +224,12 @@ class RetroTheme extends ThemeProtocol {
           navbarFont: const TextStyle(
             fontSize: 34,
             fontWeight: FontWeight.bold,
+            color: Colors.black,
           ),
           textFont: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w100,
+            color: Colors.white,
           ),
           captionFont: const TextStyle(
             fontSize: 14,
@@ -233,7 +240,7 @@ class RetroTheme extends ThemeProtocol {
             fontWeight: FontWeight.w500,
           ),
           backgroundColor: const Color.fromRGBO(194, 194, 194, 1),
-          backgroundImage: "assets/retro.jpg",
+          backgroundImage: "assets/theme/retro.jpg",
         );
 }
 
@@ -252,6 +259,7 @@ class SoftSandsTheme extends ThemeProtocol {
           navbarFont: const TextStyle(
             fontFamily: "TrebuchetMS-Bold",
             fontSize: 34,
+            color: Colors.black,
           ),
           textFont: const TextStyle(
             fontFamily: "TrebuchetMS",
@@ -266,6 +274,6 @@ class SoftSandsTheme extends ThemeProtocol {
             fontSize: 20,
           ),
           backgroundColor: const Color.fromRGBO(250, 250, 232, 1),
-          backgroundImage: "assets/softsands.jpg",
+          backgroundImage: "assets/theme/softsands.jpg",
         );
 }

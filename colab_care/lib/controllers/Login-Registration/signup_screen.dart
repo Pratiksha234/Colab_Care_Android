@@ -1,23 +1,16 @@
-import 'package:colab_care/controllers/Home_Screen/home_screen.dart';
-import 'package:colab_care/controllers/Home_Screen/tab_bar.dart';
-import 'package:colab_care/models/user_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
+
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:colab_care/Shared_preferences.dart';
 import 'dart:io';
 import '../../../views/reusable_widgets.dart';
+import 'package:colab_care/exports.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
@@ -29,24 +22,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
       TextEditingController();
   final TextEditingController _lastNameTextController = TextEditingController();
   final TextEditingController _authCodeTextController = TextEditingController();
-  String? selectedRole;
+  late EncryptionService _encryptionService;
 
+  String? selectedRole;
+  String safeEmail = '';
   File? imageFile;
   bool passwordVisible = false;
+  bool repasswordVisible = false;
 
   Future<void> _signUpAndNavigateToHomeScreen() async {
     try {
+      final isValidAuth = await checkAuth(); // Check authentication
+      if (!isValidAuth) {
+        throw Exception("Invalid authentication");
+      }
       final value = await _signUpWithEmailAndPassword();
       if (kDebugMode) {
         print("Created New Account");
       }
       final uid = value.user!.uid;
-
+      safeEmail = DatabaseUtils.convertToHyphenSeparatedEmail(
+          _emailTextController.text);
       UserData newUser = UserData(
         uid: uid,
         first_name: _firstNameTextController.text,
         last_name: _lastNameTextController.text,
-        email: _emailTextController.text,
+        email: safeEmail,
         user_role: 'Patient',
         token: 'android',
       );
@@ -54,10 +55,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       await _saveUserDataToDatabase(uid, newUserMap);
       await _saveUserDataToAllUsers(newUser, newUserMap);
-      String new_email = convertToHyphenSeparatedEmail(newUser.email);
-      await SharedPreferencesUtils.saveUserDataToSharedPreferences(
-          new_email, newUser.first_name);
-      await _uploadImage(new_email); // Upload the image after saving user data
+      String new_email =
+          DatabaseUtils.convertToHyphenSeparatedEmail(newUser.email);
+      await UserData.saveUserDataToSharedPreferences(newUser);
+      await _uploadImage(
+          new_email, newUser.email); // Upload the image after saving user data
 
       if (kDebugMode) {
         print("Navigating to HomeScreen");
@@ -74,23 +76,92 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  Future<void> _uploadImage(String new_email) async {
+  @override
+  void initState() {
+    super.initState();
+    _encryptionService = EncryptionService
+        .shared; // Initialize _encryptionService in the initState method
+  }
+
+  String? decryptMessage(String encryptedMessage) {
+    try {
+      return _encryptionService.decrypt(encryptedMessage);
+    } catch (e) {
+      return "Decryption error: $e";
+    }
+  }
+
+  Future<bool> checkAuth() async {
+    try {
+      // Decrypt the authentication code
+      String decryptedAuth =
+          _encryptionService.decrypt(_authCodeTextController.text);
+      print('Decrypted Auth: $decryptedAuth');
+
+      // Query the Firebase Realtime Database
+      final snapshot = await FirebaseDatabase.instance
+          .ref()
+          .child('auth')
+          .child('patient')
+          .orderByKey() // Order by key
+          .equalTo(decryptedAuth)
+          .get(); // Use get() instead of once()
+
+      // Log snapshot details for debugging
+      print('Snapshot Key: ${snapshot.key}');
+      print('Snapshot Value: ${snapshot.value}');
+      print('Snapshot Exists: ${snapshot.exists}');
+
+      // Check if the authentication code exists in the database
+      if (snapshot.exists && snapshot.value != null) {
+        return true; // Authentication successful
+      } else {
+        print('Authentication code not found');
+        return false; // Authentication failed
+      }
+    } catch (error) {
+      // Handle decryption or database query errors
+      print('Error Exception: $error');
+      return false; // Authentication failed due to error
+    }
+  }
+
+  Future<void> _uploadImage(String uid, String emaild) async {
+    String email = DatabaseUtils.convertToHyphenSeparatedEmail(emaild);
+    email = '${email}_profile_picture';
     if (imageFile != null) {
       try {
-        final imageName = '$new_email\_profile_picture.png';
-
         final storageRef = firebase_storage.FirebaseStorage.instance
             .ref()
             .child('images')
-            .child('$imageName');
+            .child('$email.png');
 
         await storageRef.putFile(imageFile!);
 
         final downloadUrl = await storageRef.getDownloadURL();
+
+        // Save the download URL to SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('profileImageUrl', downloadUrl);
+
         // You can save this `downloadUrl` to your user's profile in the database if needed.
       } catch (error) {
         print('Error uploading image: $error');
       }
+    } else {
+      imageFile = Image.asset('assets/icon/personal_icon.png') as File?;
+      final storageRef = firebase_storage.FirebaseStorage.instance
+          .ref()
+          .child('images')
+          .child('$email.png');
+
+      await storageRef.putFile(imageFile!);
+
+      final downloadUrl = await storageRef.getDownloadURL();
+
+      // Save the download URL to SharedPreferences
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // await prefs.setString('profileImageUrl', downloadUrl);
     }
   }
 
@@ -99,16 +170,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       email: _emailTextController.text,
       password: _passwordTextController.text,
     );
-  }
-
-  String convertToHyphenSeparatedEmail(String email) {
-    // Replace special characters with hyphen
-    String sanitizedEmail = email.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '-');
-
-    // Convert to lowercase
-    sanitizedEmail = sanitizedEmail.toLowerCase();
-
-    return sanitizedEmail;
   }
 
   Future<void> _saveUserDataToDatabase(
@@ -120,19 +181,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<void> _saveUserDataToAllUsers(
       UserData user, Map<String, dynamic> userData) async {
     final databaseRef = FirebaseDatabase.instance.ref();
-    String new_email = convertToHyphenSeparatedEmail(user.email);
+    String newEmail = DatabaseUtils.convertToHyphenSeparatedEmail(user.email);
 
     // Concatenate last_name to first_name and store as name
     String fullName = '${userData['first_name']} ${userData['last_name']}';
 
     Map<String, dynamic> userSubset = {
-      'email': new_email,
+      'email': user.email,
       'name': fullName,
       'token': userData['token'],
       'user_role': userData['user_role'],
     };
 
-    await databaseRef.child('all-users').child(new_email).set(userSubset);
+    await databaseRef.child('all-users').child(newEmail).set(userSubset);
   }
 
   final List<String> roleOptions = ["Patient", "Provider"];
@@ -142,6 +203,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        toolbarHeight: 70,
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         iconTheme: const IconThemeData(
             color: Colors.black), // Set the icon color to black
@@ -149,7 +212,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         title: const Text(
           "Sign Up",
           style: TextStyle(
-              color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+              color: Colors.black, fontSize: 36, fontWeight: FontWeight.bold),
         ),
       ),
       body: Container(
@@ -159,8 +222,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           gradient: LinearGradient(
             colors: [
               Color.fromARGB(96, 210, 206, 153),
-              Color.fromARGB(96, 210, 206, 153),
-              Color.fromARGB(96, 210, 206, 153),
+              Colors.white38,
+              Colors.white38,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -168,7 +231,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 120, 20, 0),
+            padding: const EdgeInsets.fromLTRB(20, 80, 20, 0),
             child: Column(
               children: <Widget>[
                 buildProfileImage(),
@@ -177,55 +240,61 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 reusableTextField(
                   "Enter First Name",
                   Icons.person_outline,
-                  false,
                   _firstNameTextController,
                 ),
                 const SizedBox(height: 20),
                 reusableTextField(
                   "Enter Last Name",
                   Icons.person_outline,
-                  false,
                   _lastNameTextController,
                 ),
                 const SizedBox(height: 20),
                 reusableTextField(
                   "Enter Email Id",
                   Icons.email_outlined,
-                  false,
                   _emailTextController,
                 ),
                 const SizedBox(height: 20),
-                reusableTextField(
+                reusablePasswordField(
                   "Enter Password",
                   Icons.lock_outlined,
-                  true,
+                  !passwordVisible,
                   _passwordTextController,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      passwordVisible ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        passwordVisible = !passwordVisible;
+                      });
+                    },
+                  ),
                 ),
                 const SizedBox(height: 20),
-                reusableTextField(
+                reusablePasswordField(
                   "Re-enter Password",
                   Icons.lock_outlined,
-                  true,
+                  !repasswordVisible,
                   _reenterTextController,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      repasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        repasswordVisible = !repasswordVisible;
+                      });
+                    },
+                  ),
                 ),
                 const SizedBox(height: 20),
                 reusableTextField(
                   "Auth Code",
                   Icons.security,
-                  true,
                   _authCodeTextController,
-                ),
-                const SizedBox(height: 20),
-                reusableRoleDropdown(
-                  "Select Role",
-                  Icons.person_outline,
-                  roleOptions,
-                  selectedRole,
-                  (String? newValue) {
-                    setState(() {
-                      selectedRole = newValue;
-                    });
-                  },
                 ),
                 const SizedBox(height: 20),
                 buildFirebaseUIButton(
@@ -248,16 +317,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
       children: [
         imageFile == null
             ? Image.asset(
-                'assets/personal_icon.png',
-                height: 100.0,
-                width: 100.0,
+                'assets/icon/personal_icon.png',
+                height: 150.0,
+                width: 150.0,
               )
             : ClipRRect(
                 borderRadius: BorderRadius.circular(100.0),
                 child: Image.file(
                   imageFile!,
-                  height: 200.0,
-                  width: 200.0,
+                  height: 150.0,
+                  width: 150.0,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -303,12 +372,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
+    if (kDebugMode) {
+      print("done");
+    }
+    if (kDebugMode) {
+      print(statuses[Permission.storage]);
+    }
+
     if (statuses[Permission.storage]!.isGranted &&
         statuses[Permission.camera]!.isGranted) {
+      // ignore: use_build_context_synchronously
       showImagePicker(context);
     } else {
-      // Handle the case where permissions are denied
-      print('Permissions denied');
+      if (kDebugMode) {
+        print('no permission provided');
+      }
     }
   }
 

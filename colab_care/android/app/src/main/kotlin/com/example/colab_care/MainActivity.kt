@@ -1,4 +1,4 @@
-package com.example.colab_care
+package com.ub.colab_care
 
 import io.flutter.embedding.android.FlutterActivity
 

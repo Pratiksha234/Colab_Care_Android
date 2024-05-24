@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'package:colab_care/Shared_preferences.dart';
-import 'package:colab_care/controllers/Home_Screen/tab_bar.dart';
+import 'package:colab_care/controllers/Home_Screen/home/tab_bar.dart';
 import 'package:colab_care/controllers/Login-Registration/reset_password.dart';
 import 'package:colab_care/controllers/Login-Registration/signup_screen.dart';
 import 'package:colab_care/database_access.dart';
@@ -122,6 +121,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
+  bool passwordVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -159,12 +160,28 @@ class _SignInScreenState extends State<SignInScreen> {
                     height: 40,
                   ),
                   reusableTextField("Enter Name or Email", Icons.person_outline,
-                      false, _emailTextController),
+                      _emailTextController),
                   const SizedBox(
                     height: 20,
                   ),
-                  reusableTextFieldWithPasswordToggle("Enter Password",
-                      Icons.lock_outline, _passwordTextController),
+                  reusablePasswordField(
+                    "Enter Password",
+                    Icons.lock_outlined,
+                    !passwordVisible,
+                    _passwordTextController,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          passwordVisible = !passwordVisible;
+                        });
+                      },
+                    ),
+                  ),
                   const SizedBox(
                     height: 5,
                   ),
@@ -180,26 +197,18 @@ class _SignInScreenState extends State<SignInScreen> {
                       String? uid = userCredential.user?.uid;
                       print(uid);
                       if (userCredential.user != null) {
-                        String? firstName =
-                            await DatabaseUtils.getFirstNameFromDatabase(uid!);
-
-                        if (firstName != null) {
-                          SharedPreferencesUtils
-                              .saveUserDataToSharedPreferences(
-                                  _emailTextController.text, firstName);
-
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HomePage(),
-                            ),
-                          );
-                        } else {
-                          // Handle case where first name is null
-                          print("First name is null");
-                        }
+                        DatabaseUtils.saveUserDatatoSharedPreference(
+                            uid!, _emailTextController.text);
                       }
+
+                      // ignore: use_build_context_synchronously
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomePage(),
+                        ),
+                      );
+                      // Handle case where first name is null
                     } catch (error) {
                       print("Error $error");
                       // ignore: use_build_context_synchronously

@@ -8,32 +8,37 @@ class ThemeSelectionScreen extends StatelessWidget {
   final List<Map<String, dynamic>> themesData = [
     {
       'name': 'Default',
-      'imageAsset': 'assets/default.jpg', // Replace with your image asset path
+      'imageAsset': 'assets/theme/default.jpg',
     },
     {
       'name': 'Oceanic Harmony',
-      'imageAsset': 'assets/oceanic.jpg', // Replace with your image asset path
+      'imageAsset':
+          'assets/theme/oceanic.jpg', // Replace with your image asset path
     },
     {
       'name': 'Burgundy Twilight',
-      'imageAsset': 'assets/burgundy.jpg', // Replace with your image asset path
+      'imageAsset':
+          'assets/theme/burgundy.jpg', // Replace with your image asset path
     },
     {
       'name': 'Soothing Foliage',
-      'imageAsset': 'assets/green.jpg', // Replace with your image asset path
+      'imageAsset':
+          'assets/theme/green.jpg', // Replace with your image asset path
     },
     {
       'name': 'Violet Dawn',
-      'imageAsset': 'assets/purple.jpg', // Replace with your image asset path
+      'imageAsset':
+          'assets/theme/purple.jpg', // Replace with your image asset path
     },
     {
       'name': 'Retro',
-      'imageAsset': 'assets/retro.jpg', // Replace with your image asset path
+      'imageAsset':
+          'assets/theme/retro.jpg', // Replace with your image asset path
     },
     {
       'name': 'Soft Sands',
       'imageAsset':
-          'assets/softsands.jpg', // Replace with your image asset path
+          'assets/theme/softsands.jpg', // Replace with your image asset path
     },
   ];
 
@@ -66,7 +71,7 @@ class ThemeSelectionScreen extends StatelessWidget {
               Navigator.pop(context);
             },
             child: Container(
-              height: 120.0,
+              height: 100.0,
               margin: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15.0),

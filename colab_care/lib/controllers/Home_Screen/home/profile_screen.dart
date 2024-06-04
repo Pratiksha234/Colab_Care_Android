@@ -6,17 +6,20 @@ import 'package:colab_care/controllers/Login-Registration/signin_screen.dart';
 import 'package:colab_care/controllers/Themes/theme_manager.dart';
 import 'package:colab_care/database_access.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() {
+    return _ProfileScreenState();
+  }
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
@@ -46,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Reference ref = firebase_storage.FirebaseStorage.instance
         .ref()
         .child('images/$newEmail.jpg');
-    final data = await ref.getData();
+    // final data = await ref.getData();
   }
 
   void logout(BuildContext context) async {
@@ -102,14 +105,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Text('Profile', style: theme.navbarFont),
-        ),
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 28,
         ),
         centerTitle: false,
         titleSpacing: 0,

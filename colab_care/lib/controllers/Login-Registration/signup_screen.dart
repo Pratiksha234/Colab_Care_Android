@@ -8,10 +8,10 @@ import '../../../views/reusable_widgets.dart';
 import 'package:colab_care/exports.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({super.key});
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
@@ -67,7 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const TabBarScreen()),
       );
     } catch (error) {
       if (kDebugMode) {

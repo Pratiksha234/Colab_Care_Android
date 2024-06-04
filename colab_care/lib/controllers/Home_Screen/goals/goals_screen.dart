@@ -12,10 +12,12 @@ import 'package:colab_care/models/goal_model.dart'; // Ensure you have a Goal mo
 import 'package:colab_care/exports.dart';
 
 class GoalsScreen extends StatefulWidget {
-  const GoalsScreen({Key? key}) : super(key: key);
+  const GoalsScreen({super.key});
 
   @override
-  _GoalsScreenState createState() => _GoalsScreenState();
+  State<GoalsScreen> createState() {
+    return _GoalsScreenState();
+  }
 }
 
 class _GoalsScreenState extends State<GoalsScreen> {
@@ -68,7 +70,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
       backgroundColor: theme.backgroundGradientStart,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        toolbarHeight: 100,
+        toolbarHeight: 80,
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Text(

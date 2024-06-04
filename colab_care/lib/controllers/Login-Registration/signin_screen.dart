@@ -9,11 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({Key? key}) : super(key: key);
+  const SignInScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _SignInScreenState createState() => _SignInScreenState();
+  State<SignInScreen> createState() {
+    return _SignInScreenState();
+  }
 }
 
 class _SignInScreenState extends State<SignInScreen> {
@@ -205,7 +206,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const HomePage(),
+                          builder: (context) => const TabBarScreen(),
                         ),
                       );
                       // Handle case where first name is null

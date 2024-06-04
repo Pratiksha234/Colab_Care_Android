@@ -36,14 +36,13 @@ class ThemeProtocol {
   });
 }
 
-class ThemeManager {
-  static ThemeData getDefaultTheme(ThemeProtocol themeData) {
-    return ThemeData(
-      primaryColor: themeData.backgroundGradientStart,
-      backgroundColor: themeData.backgroundColor,
-    );
-  }
-}
+// class ThemeManager {
+//   static ThemeData getDefaultTheme(ThemeProtocol themeData) {
+//     return ThemeData(
+//       primaryColor: themeData.backgroundGradientStart,
+//     );
+//   }
+// }
 
 class DefaultTheme extends ThemeProtocol {
   DefaultTheme()
@@ -110,7 +109,7 @@ class BurgundyTwilightTheme extends ThemeProtocol {
       : super(
           backgroundGradientStart: const Color.fromRGBO(231, 204, 204, 1),
           backgroundGradientStop: const Color.fromRGBO(207, 181, 166, 1),
-          borderColor: Color.fromARGB(255, 188, 160, 167),
+          borderColor: const Color.fromARGB(255, 188, 160, 167),
           buttonTintColor: const Color.fromARGB(255, 153, 97, 123),
           tabBarBackgroundColor: const Color.fromARGB(255, 100, 56, 66),
           tabBarSelectedItemColor: Colors.white,
@@ -160,7 +159,6 @@ class SoothingFoliageTheme extends ThemeProtocol {
           textFont: const TextStyle(
             fontFamily: "AvenirNext-Regular",
             fontSize: 16,
-            color: Colors.white,
           ),
           captionFont: const TextStyle(
             fontFamily: "AvenirNext-Regular",
@@ -186,7 +184,7 @@ class VioletDawnTheme extends ThemeProtocol {
           tabBarBackgroundColor: const Color.fromRGBO(100, 92, 186, 1),
           tabBarSelectedItemColor: Colors.white,
           tabBarUnselectedItemColor: const Color.fromRGBO(192, 171, 228, 1),
-          headerColor: Color.fromARGB(255, 29, 29, 32),
+          headerColor: const Color.fromARGB(255, 29, 29, 32),
           textColor: const Color.fromRGBO(100, 92, 186, 1),
           navbarFont: const TextStyle(
             fontFamily: "Verdana-Bold",
@@ -229,7 +227,6 @@ class RetroTheme extends ThemeProtocol {
           textFont: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w100,
-            color: Colors.white,
           ),
           captionFont: const TextStyle(
             fontSize: 14,

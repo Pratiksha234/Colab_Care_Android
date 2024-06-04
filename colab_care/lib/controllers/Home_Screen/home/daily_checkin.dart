@@ -8,10 +8,12 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DailyCheckInForm extends StatefulWidget {
-  const DailyCheckInForm({Key? key}) : super(key: key);
+  const DailyCheckInForm({super.key});
 
   @override
-  _DailyCheckInFormState createState() => _DailyCheckInFormState();
+  State<DailyCheckInForm> createState() {
+    return _DailyCheckInFormState();
+  }
 }
 
 class _DailyCheckInFormState extends State<DailyCheckInForm> {
@@ -137,7 +139,7 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
       print(currentUserEmail);
       // Firebase Database reference
       DatabaseReference databaseReference = FirebaseDatabase.instance
-          .reference()
+          .ref()
           .child('patient_data')
           .child(currentUserEmail)
           .child('dailycheckin')
@@ -193,7 +195,6 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: Text('Daily Check In'),
@@ -312,7 +313,8 @@ class SuggestedExercisesScreen extends StatelessWidget {
                   // Navigate to the home page
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
+                    MaterialPageRoute(
+                        builder: (context) => const TabBarScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -354,7 +356,8 @@ class NoSuggestionsScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
+                    MaterialPageRoute(
+                        builder: (context) => const TabBarScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

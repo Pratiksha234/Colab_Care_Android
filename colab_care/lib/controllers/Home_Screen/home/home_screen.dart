@@ -15,7 +15,9 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() {
+    return _HomeScreenState();
+  }
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -23,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late String firstName = '';
   String userEmail = '';
   late ThemeProtocol currentTheme;
-  late String profile_url = '';
+  late String profileUrl = '';
 
   @override
   void initState() {
@@ -36,8 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final prefs = await SharedPreferences.getInstance();
     firstName = prefs.getString('first_name') ?? '';
     userEmail = prefs.getString('email') ?? '';
-    profile_url = prefs.getString('profileImageUrl') ?? '';
-    print(profile_url);
+    profileUrl = prefs.getString('profileImageUrl') ?? '';
   }
 
   @override
@@ -45,7 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
     DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('quotes');
     DateTime now = DateTime.now();
     String formattedDay = DateFormat('dd').format(now);
+
     final theme = Provider.of<ThemeNotifier>(context).currentTheme;
+    final topPadding = MediaQuery.of(context).padding.top;
+
     dbRef.onValue.listen((event) {
       setState(() {
         String specificValue =
@@ -55,61 +59,31 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize:
-            const Size.fromHeight(100.0), // Set your desired height here
-        child: AppBar(
-          automaticallyImplyLeading: false,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 20.0,
-                    bottom: 0.0), // Adjust padding as needed
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    'Home',
-                    style: theme.navbarFont,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 10.0,
-                    right: 10.0,
-                    left: 30.0,
-                    bottom: 0.0), // Adjust padding as needed
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfileScreen(),
-                      ),
-                    );
-                  },
-                  child: CircleAvatar(
-                    radius: 23,
-                    backgroundColor: theme.tabBarBackgroundColor,
-                    backgroundImage: profile_url.isNotEmpty
-                        ? NetworkImage(profile_url)
-                        : null,
-                    child: profile_url.isEmpty
-                        ? const Icon(Icons.person,
-                            size: 70, color: Colors.white)
-                        : null,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: theme.backgroundGradientStart,
-          centerTitle: false,
-          titleSpacing: 0,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+          "Home",
+          style: theme.navbarFont,
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProfileScreen(),
+                ),
+              );
+            },
+            iconSize: 40,
+            icon: Icon(
+              Icons.person,
+              color: theme.tabBarBackgroundColor,
+            ),
+          )
+        ],
+        backgroundColor: theme.backgroundGradientStart,
+        centerTitle: false,
       ),
       body: Stack(
         children: [
@@ -126,33 +100,35 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Positioned(
-            top: 0,
+            top: -topPadding,
             left: 0,
             right: 0,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: Image.asset(
-                theme.backgroundImage,
-                fit: BoxFit.cover,
+              height: MediaQuery.of(context).size.height * 0.35,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(theme.backgroundImage),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
           Positioned(
-            top: MediaQuery.of(context).size.height * 0.3,
+            top: MediaQuery.of(context).size.height * 0.31,
             left: 0,
             right: 0,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Text(
                     '👋 Hello, $firstName!',
                     style: theme.headerFont,
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.all(16),
+                  margin: const EdgeInsets.all(8),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: theme.backgroundColor,
@@ -165,40 +141,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 // Centered Daily Check-In button
                 Center(
-                  child: Container(
-                    width: 250, // Set the width you desire
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            theme.buttonTintColor),
-                        // You can adjust other properties here, such as text color, padding, etc.
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const DailyCheckInForm()),
-                        );
-                      },
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.upload_outlined,
-                            color: Colors.white,
-                          ), // Add the upload icon here
-                          SizedBox(
-                              width:
-                                  8), // Add some spacing between the icon and text
-                          Text(
-                            'Daily Check-In',
-                            style: TextStyle(
-                              fontFamily: "TrebuchetMS",
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.buttonTintColor),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const DailyCheckInForm()),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.upload_outlined,
+                      color: Colors.white,
+                    ),
+                    label: const Text(
+                      "Daily Check-In",
+                      style: TextStyle(
+                        fontFamily: "TrebuchetMS",
+                        fontSize: 16,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -209,12 +171,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        heroTag: 'Theme',
+        // heroTag: 'Theme',
         backgroundColor: theme.buttonTintColor,
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ThemeSelectionScreen()),
+            MaterialPageRoute(
+              builder: (context) => ThemeSelectionScreen(),
+            ),
           );
         },
         child: const Icon(

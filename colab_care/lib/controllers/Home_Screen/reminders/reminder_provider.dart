@@ -65,15 +65,15 @@ class RemindersProvider extends ChangeNotifier {
     await prefs.setString('reminders', jsonEncode(remindersList));
   }
 
-  Future<void> loadRemindersFromPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
-    final remindersList = prefs.getStringList('reminders');
-    if (remindersList != null) {
-      _reminders =
-          remindersList.map((json) => Reminder.fromJson(json)).toList();
-      notifyListeners();
-    }
-  }
+  // Future<void> loadRemindersFromPrefs() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final remindersList = prefs.getStringList('reminders');
+  //   if (remindersList != null) {
+  //     _reminders =
+  //         remindersList.map((json) => Reminder.fromJson(json)).toList();
+  //     notifyListeners();
+  //   }
+  // }
 
   void addReminder(Reminder reminder) {
     _reminders.add(reminder);

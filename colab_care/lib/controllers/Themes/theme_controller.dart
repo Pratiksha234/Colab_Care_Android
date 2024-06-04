@@ -4,7 +4,8 @@ import 'package:colab_care/controllers/Themes/theme_manager.dart';
 import 'package:colab_care/controllers/Themes/themes.dart';
 
 class ThemeSelectionScreen extends StatelessWidget {
-  ThemeSelectionScreen({Key? key});
+  ThemeSelectionScreen({super.key});
+
   final List<Map<String, dynamic>> themesData = [
     {
       'name': 'Default',
@@ -48,7 +49,7 @@ class ThemeSelectionScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         title: Text(
           'Select Theme',
           style: theme.navbarFont,

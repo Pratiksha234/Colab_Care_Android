@@ -23,7 +23,7 @@ class _MedicationScreenState extends State<MedicationScreen> {
 
   void loadReminders() async {
     remindersProvider = Provider.of<RemindersProvider>(context, listen: false);
-    await remindersProvider.loadRemindersFromPrefs();
+    // await remindersProvider.loadRemindersFromPrefs();
   }
 
   @override

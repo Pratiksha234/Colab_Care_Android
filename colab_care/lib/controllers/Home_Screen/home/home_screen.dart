@@ -1,12 +1,10 @@
-// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:colab_care/controllers/Home_Screen/home/daily_checkin.dart';
+import 'package:colab_care/controllers/Home_Screen/home/home_controller.dart';
 import 'package:colab_care/controllers/Home_Screen/home/profile_screen.dart';
 import 'package:colab_care/controllers/Themes/theme_controller.dart';
 import 'package:colab_care/controllers/Themes/theme_manager.dart';
 import 'package:colab_care/controllers/Themes/themes.dart';
-import 'package:intl/intl.dart';
 
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,42 +19,50 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String motivationalMessage = "Loading...";
-  late String firstName = '';
-  String userEmail = '';
+  final HomeController _userController = HomeController();
+  String _motivationalMessage = "Loading ...";
+
+  String firstName = 'User';
   late ThemeProtocol currentTheme;
-  late String profileUrl = '';
 
   @override
   void initState() {
     super.initState();
     fetchUserData();
+    _fetchData();
     currentTheme = DefaultTheme();
   }
 
   Future<void> fetchUserData() async {
     final prefs = await SharedPreferences.getInstance();
     firstName = prefs.getString('first_name') ?? '';
-    userEmail = prefs.getString('email') ?? '';
-    profileUrl = prefs.getString('profileImageUrl') ?? '';
+  }
+
+  Future<void> _fetchData() async {
+    final quote = await _userController.fetchDailyQuote();
+    setState(() {
+      _motivationalMessage = quote;
+    });
+  }
+
+  void _openThemesOverlay(BuildContext context) {
+    showModalBottomSheet(
+      useSafeArea: true,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.0),
+        ),
+      ),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      context: context,
+      builder: (ctx) => ThemeSelectionScreen(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('quotes');
-    DateTime now = DateTime.now();
-    String formattedDay = DateFormat('dd').format(now);
-
     final theme = Provider.of<ThemeNotifier>(context).currentTheme;
-    final topPadding = MediaQuery.of(context).padding.top;
-
-    dbRef.onValue.listen((event) {
-      setState(() {
-        String specificValue =
-            event.snapshot.child(formattedDay).value.toString();
-        motivationalMessage = specificValue;
-      });
-    });
 
     return Scaffold(
       appBar: AppBar(
@@ -100,11 +106,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Positioned(
-            top: -topPadding,
+            top: 0,
             left: 0,
             right: 0,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.35,
+              height: MediaQuery.of(context).size.height * 0.30,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(theme.backgroundImage),
@@ -123,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    '👋 Hello, $firstName!',
+                    '👋 Hello, $firstName',
                     style: theme.headerFont,
                   ),
                 ),
@@ -132,12 +138,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: theme.backgroundColor,
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    motivationalMessage,
+                    _motivationalMessage,
                     style: theme.textFont,
                   ),
+                ),
+                const SizedBox(
+                  height: 16,
                 ),
                 // Centered Daily Check-In button
                 Center(
@@ -174,12 +183,13 @@ class _HomeScreenState extends State<HomeScreen> {
         // heroTag: 'Theme',
         backgroundColor: theme.buttonTintColor,
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ThemeSelectionScreen(),
-            ),
-          );
+          _openThemesOverlay(context);
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => ThemeSelectionScreen(),
+          //   ),
+          // );
         },
         child: const Icon(
           Icons.brush,

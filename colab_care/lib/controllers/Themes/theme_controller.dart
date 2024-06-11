@@ -1,3 +1,4 @@
+import 'package:colab_care/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:colab_care/controllers/Themes/theme_manager.dart';
@@ -48,51 +49,49 @@ class ThemeSelectionScreen extends StatelessWidget {
     final theme = Provider.of<ThemeNotifier>(context).currentTheme;
 
     return Scaffold(
-      appBar: AppBar(
-        // automaticallyImplyLeading: false,
-        title: Text(
-          'Select Theme',
-          style: theme.navbarFont,
+      appBar: const CustomAppbar(appBarTitle: "Themes"),
+      backgroundColor: theme.backgroundColor,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 4.0),
+        child: ListView.builder(
+          itemCount: themesData.length, // Total number of themes
+          itemBuilder: (context, index) {
+            final themeData = themesData[index];
+            final themeName = themeData['name'];
+            final imageAsset = themeData['imageAsset'];
+
+            final theme = getThemeByIndex(index);
+
+            return GestureDetector(
+              onTap: () {
+                final themeNotifier =
+                    Provider.of<ThemeNotifier>(context, listen: false);
+                themeNotifier.currentTheme = theme;
+                Navigator.pop(context);
+              },
+              child: Container(
+                height: 100.0,
+                margin: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  image: DecorationImage(
+                    image: AssetImage(imageAsset),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  themeName,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            );
+          },
         ),
-      ),
-      body: ListView.builder(
-        itemCount: themesData.length, // Total number of themes
-        itemBuilder: (context, index) {
-          final themeData = themesData[index];
-          final themeName = themeData['name'];
-          final imageAsset = themeData['imageAsset'];
-
-          final theme = getThemeByIndex(index);
-
-          return GestureDetector(
-            onTap: () {
-              final themeNotifier =
-                  Provider.of<ThemeNotifier>(context, listen: false);
-              themeNotifier.currentTheme = theme;
-              Navigator.pop(context);
-            },
-            child: Container(
-              height: 100.0,
-              margin: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.0),
-                image: DecorationImage(
-                  image: AssetImage(imageAsset),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                themeName,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 28,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          );
-        },
       ),
     );
   }

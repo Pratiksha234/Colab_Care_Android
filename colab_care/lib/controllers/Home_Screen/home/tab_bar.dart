@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 // Internal
 import 'package:colab_care/controllers/Themes/theme_manager.dart';
 import 'package:colab_care/controllers/Home_Screen/home/home_screen.dart';
-import 'package:colab_care/controllers/Home_Screen/mindfulness/Mindfullness.dart';
+import 'package:colab_care/controllers/Home_Screen/mindfulness/mindfulness_screen.dart';
 import 'package:colab_care/controllers/Home_Screen/goals/goals_screen.dart';
 import 'package:colab_care/controllers/Home_Screen/messaging/messaging.dart';
 import 'package:colab_care/controllers/Home_Screen/reminders/medication.dart';

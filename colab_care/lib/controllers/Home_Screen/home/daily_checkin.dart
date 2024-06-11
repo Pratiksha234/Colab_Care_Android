@@ -98,9 +98,9 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
-        color: theme.backgroundColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(color: theme.borderColor),
+        border: Border.all(color: theme.tabBarBackgroundColor),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
@@ -125,18 +125,18 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
 
   void submitForm() {
     if (isFormValid()) {
-      print('Form submitted with values:');
-      print('Feeling Today: $_feelingToday');
-      print('Stress Level: $_stressLevel');
-      print('Sleep Satisfaction: $_sleepSatisfaction');
-      print('Engaging Activities: $_engagingActivities');
-      print('Social Relationships: $_socialRelationships');
-      print('Medication Taken: $_medicationTaken');
+      // print('Form submitted with values:');
+      // print('Feeling Today: $_feelingToday');
+      // print('Stress Level: $_stressLevel');
+      // print('Sleep Satisfaction: $_sleepSatisfaction');
+      // print('Engaging Activities: $_engagingActivities');
+      // print('Social Relationships: $_socialRelationships');
+      // print('Medication Taken: $_medicationTaken');
 
       final currentDate = DateFormat('yyyyMMdd').format(DateTime.now());
       currentUserEmail =
           DatabaseUtils.convertToHyphenSeparatedEmail(currentUserEmail);
-      print(currentUserEmail);
+      // print(currentUserEmail);
       // Firebase Database reference
       DatabaseReference databaseReference = FirebaseDatabase.instance
           .ref()
@@ -174,7 +174,7 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SuggestedExercisesScreen(),
+            builder: (context) => const SuggestedExercisesScreen(),
           ),
         );
       } else {
@@ -182,7 +182,7 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => NoSuggestionsScreen(),
+            builder: (context) => const NoSuggestionsScreen(),
           ),
         );
       }
@@ -195,9 +195,12 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
 
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: Colors.white, //change your color here
+        ),
         title: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: Text('Daily Check In'),
+          child: Text('Daily Check-In'),
         ),
         backgroundColor: theme.tabBarBackgroundColor,
         titleTextStyle: const TextStyle(
@@ -205,16 +208,16 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
           fontSize: 28,
         ),
         centerTitle: false,
-        titleSpacing: 0,
       ),
-      body: Center(
+      backgroundColor: theme.backgroundColor,
+      body: Scrollbar(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Text(
-                '1. How are you feeling today? *',
+                '1. How are you feeling today?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               buildDropdown(feelings, _feelingToday, (value) {
@@ -223,7 +226,7 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
                 });
               }),
               const Text(
-                '2. I have been feeling stressed and nervous. *',
+                '2. I have been feeling stressed and nervous.',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               buildDropdown(stressLevels, _stressLevel, (value) {
@@ -232,7 +235,7 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
                 });
               }),
               const Text(
-                '3. I have been satisfied with my sleep. *',
+                '3. I have been satisfied with my sleep.',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               buildDropdown(sleepSatisfaction, _sleepSatisfaction, (value) {
@@ -241,7 +244,7 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
                 });
               }),
               const Text(
-                '4. I have been engaging in activities I enjoy. *',
+                '4. I have been engaging in activities I enjoy.',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               buildDropdown(engagingActivities, _engagingActivities, (value) {
@@ -250,7 +253,7 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
                 });
               }),
               const Text(
-                '5. My social relationships have been supportive and rewarding. *',
+                '5. My social relationships have been supportive and rewarding.',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               buildDropdown(socialRelationships, _socialRelationships, (value) {
@@ -259,7 +262,7 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
                 });
               }),
               const Text(
-                '6. Did you take your medication yesterday? *',
+                '6. Did you take your medication yesterday?',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               buildDropdown(medicationTaken, _medicationTaken, (value) {
@@ -272,11 +275,15 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
                 onPressed: isFormValid() ? submitForm : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isFormValid()
-                      ? theme.backgroundColor
+                      ? theme.tabBarBackgroundColor
                       : theme.buttonTintColor, // Disable button color
                 ),
-                child: const Text('Submit'),
+                child: const Text(
+                  'Submit',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
+              const SizedBox(height: 16.0),
             ],
           ),
         ),
@@ -286,7 +293,7 @@ class _DailyCheckInFormState extends State<DailyCheckInForm> {
 }
 
 class SuggestedExercisesScreen extends StatelessWidget {
-  const SuggestedExercisesScreen({Key? key}) : super(key: key);
+  const SuggestedExercisesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -332,7 +339,7 @@ class SuggestedExercisesScreen extends StatelessWidget {
 }
 
 class NoSuggestionsScreen extends StatelessWidget {
-  const NoSuggestionsScreen({Key? key}) : super(key: key);
+  const NoSuggestionsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,3 @@
-import 'package:colab_care/controllers/Home_Screen/reminders/reminder_provider.dart';
 import 'package:colab_care/controllers/Themes/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
@@ -6,13 +5,17 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:provider/provider.dart';
 
 class DailyCheckInConfigScreen extends StatefulWidget {
+  const DailyCheckInConfigScreen({super.key});
+
   @override
-  _DailyCheckInConfigScreenState createState() =>
-      _DailyCheckInConfigScreenState();
+  State<StatefulWidget> createState() {
+    return _DailyCheckInConfigScreenState();
+  }
 }
 
 class _DailyCheckInConfigScreenState extends State<DailyCheckInConfigScreen> {
   late DateTime _selectedTime;
+  int count = 400;
 
   @override
   void initState() {
@@ -36,7 +39,6 @@ class _DailyCheckInConfigScreenState extends State<DailyCheckInConfigScreen> {
     );
   }
 
-  int count = 400;
   void _addDailyCheckInReminder(BuildContext context) async {
     final now = DateTime.now();
     final selectedDateTime = DateTime(
@@ -63,8 +65,6 @@ class _DailyCheckInConfigScreenState extends State<DailyCheckInConfigScreen> {
         repeats: true, // Repeat daily
       ),
     );
-
-    Navigator.pop(context); // Close the add reminder screen
   }
 
   @override
@@ -74,7 +74,7 @@ class _DailyCheckInConfigScreenState extends State<DailyCheckInConfigScreen> {
     return Scaffold(
       backgroundColor: theme.backgroundGradientStart,
       appBar: AppBar(
-        title: const Text('Configure Daily Check-In Time'),
+        title: const Text('Daily Check-In Time'),
       ),
       body: Center(
         child: Column(
@@ -87,7 +87,8 @@ class _DailyCheckInConfigScreenState extends State<DailyCheckInConfigScreen> {
             const SizedBox(height: 20),
             TimePickerSpinner(
               is24HourMode: false,
-              normalTextStyle: TextStyle(fontSize: 24, color: Colors.black),
+              normalTextStyle:
+                  const TextStyle(fontSize: 24, color: Colors.black),
               highlightedTextStyle:
                   TextStyle(fontSize: 24, color: theme.buttonTintColor),
               spacing: 50,
@@ -102,7 +103,8 @@ class _DailyCheckInConfigScreenState extends State<DailyCheckInConfigScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _addDailyCheckInReminder(
-                  context), // Wrap the method call in a lambda function
+                context,
+              ),
               child: const Text('Save'),
             ),
           ],

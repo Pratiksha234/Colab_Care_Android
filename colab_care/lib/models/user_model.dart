@@ -2,33 +2,29 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserData {
   final String uid;
-  final String first_name;
-  final String last_name;
+  final String firstName;
+  final String lastName;
   final String email;
-  final String user_role;
+  final String userRole;
   final String token;
 
   UserData({
     required this.uid,
-    required this.first_name,
-    required this.last_name,
+    required this.firstName,
+    required this.lastName,
     required this.email,
     required this.token,
-    required this.user_role,
+    required this.userRole,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'uid': uid,
-      'first_name': first_name,
-      'last_name': last_name,
+      'first_name': firstName,
+      'last_name': lastName,
       'email': email,
       'token': token,
-      // 'goals': goals,
-      'user_role': user_role,
-      // 'daily Check in': dailyCheckin,
-      // 'val1': val1,
-      // 'val2': val2,
+      'user_role': userRole,
     };
   }
 
@@ -37,11 +33,11 @@ class UserData {
       final prefs = await SharedPreferences.getInstance();
 
       prefs.setString('email', user.email);
-      prefs.setString('first_name', user.first_name);
-      prefs.setString('last_name', user.last_name);
+      prefs.setString('first_name', user.firstName);
+      prefs.setString('last_name', user.lastName);
       prefs.setString('token', user.token);
       prefs.setString('uid', user.uid);
-      prefs.setString('user_role', user.user_role);
+      prefs.setString('user_role', user.userRole);
     } catch (e) {
       // Handle other exceptions that might occur during the process
     }

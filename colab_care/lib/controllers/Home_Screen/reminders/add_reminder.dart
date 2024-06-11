@@ -9,10 +9,12 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddReminderScreen extends StatefulWidget {
-  const AddReminderScreen({Key? key}) : super(key: key);
+  const AddReminderScreen({super.key});
 
   @override
-  _AddReminderScreenState createState() => _AddReminderScreenState();
+  State<AddReminderScreen> createState() {
+    return _AddReminderScreenState();
+  }
 }
 
 class _AddReminderScreenState extends State<AddReminderScreen> {
@@ -36,7 +38,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
   @override
   void initState() {
     super.initState();
-    _loadReminders();
+    // _loadReminders();
     _initializeLocalNotifications(); // Load reminders from shared preferences
   }
 
@@ -73,166 +75,170 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
             'Add Medicine',
             style: theme.navbarFont,
           ),
-          automaticallyImplyLeading: false,
+          // automaticallyImplyLeading: false,
         ),
-        body: SingleChildScrollView(
-          // Wrap Column with SingleChildScrollView
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'What\'s the medicine name?',
-                  style: theme.headerFont,
-                ),
-                const SizedBox(height: 10.0),
-                TextField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    labelStyle: theme.captionFont,
-                    labelText: 'Enter your medicine name here',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: theme.borderColor), // Set border color here
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: theme.borderColor), // Set border color here
-                    ),
+        body: Scrollbar(
+          child: SingleChildScrollView(
+            // Wrap Column with SingleChildScrollView
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'What\'s the medicine name?',
+                    style: theme.headerFont,
                   ),
-                ),
-                const SizedBox(height: 16.0),
-                Text(
-                  'Add Dosage ',
-                  style: theme.headerFont,
-                ),
-                const SizedBox(height: 10.0),
-                TextField(
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedDosage = double.tryParse(value) ?? 0.0;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelStyle: theme.captionFont,
-                    labelText: 'Add your medicine dosage detail',
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: theme.borderColor), // Set border color here
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: theme.borderColor), // Set border color here
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                Text(
-                  'When do you take it?',
-                  style: theme.headerFont,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Current Reminder Time: ${_selectedTime.format(context)}',
-                        style: theme.textFont,
+                  const SizedBox(height: 10.0),
+                  TextField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      labelStyle: theme.captionFont,
+                      labelText: 'Enter your medicine name here',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: theme.borderColor), // Set border color here
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: theme.borderColor), // Set border color here
                       ),
                     ),
-                    TextButton(
-                      onPressed: () async {
-                        TimeOfDay? pickedTime = await showTimePicker(
-                            context: context,
-                            initialTime: _selectedTime,
-                            builder: (BuildContext context, Widget? child) {
-                              return MediaQuery(
-                                data: MediaQuery.of(context).copyWith(
-                                  alwaysUse24HourFormat: false,
-                                ),
-                                child: Theme(
-                                  // Set colors for the clock to theme colors
-                                  data: ThemeData(
-                                    primaryColor: theme
-                                        .buttonTintColor, // Set clock hands color
-                                    backgroundColor: theme
-                                        .backgroundGradientStart, // Set clock background color
-                                  ),
-                                  child: child!,
-                                ),
-                              );
-                            });
-                        if (pickedTime != null) {
-                          setState(() {
-                            _selectedTime = pickedTime;
-                          });
-                        }
-                      },
-                      child: Text('Change Time',
-                          style: theme
-                              .headerFont), // Set text color to theme.headerFont
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16.0),
-                Row(
-                  children: [
-                    Text(
-                      'Is this a Daily Prescription?',
-                      style: theme.headerFont,
-                    ),
-                    Switch(
-                      value: _isDaily,
-                      activeColor: theme.buttonTintColor,
-                      inactiveTrackColor: theme.tabBarSelectedItemColor,
-                      onChanged: (value) {
-                        setState(() {
-                          _isDaily = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16.0),
-                Text(
-                  'Medicine Type',
-                  style: theme.headerFont,
-                ),
-                GroupButton<String>(
-                  options:
-                      GroupButtonOptions(selectedColor: theme.buttonTintColor),
-                  buttons: const ['Pill', 'Tablet', 'Syrup', 'Vitamin'],
-                  isRadio: true,
-                  onSelected: (selected, index, isSelected) {
-                    setState(() {
-                      _selectedType = selected;
-                      _selectedUnit = _medicineTypeToUnit[_selectedType] ?? '';
-                    });
-                  },
-                ),
-                const SizedBox(height: 16.0),
-                TextButton(
-                  onPressed: () {
-                    _addReminder(context);
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(theme.buttonTintColor),
-                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      const EdgeInsets.symmetric(
-                          horizontal: 3.0), // Add padding to the sides
-                    ),
-                    minimumSize: MaterialStateProperty.all<Size>(
-                      const Size(double.infinity,
-                          40), // Set minimum size to fill width
+                  ),
+                  const SizedBox(height: 16.0),
+                  Text(
+                    'Add Dosage ',
+                    style: theme.headerFont,
+                  ),
+                  const SizedBox(height: 10.0),
+                  TextField(
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedDosage = double.tryParse(value) ?? 0.0;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelStyle: theme.captionFont,
+                      labelText: 'Add your medicine dosage detail',
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: theme.borderColor), // Set border color here
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: theme.borderColor), // Set border color here
+                      ),
                     ),
                   ),
-                  child: const Text('Save Reminder',
-                      style: TextStyle(
-                          color: Colors.white)), // Adjust text color as needed
-                ),
-              ],
+                  const SizedBox(height: 16.0),
+                  Text(
+                    'When do you take it?',
+                    style: theme.headerFont,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Current Reminder Time: ${_selectedTime.format(context)}',
+                          style: theme.textFont,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          TimeOfDay? pickedTime = await showTimePicker(
+                              context: context,
+                              initialTime: _selectedTime,
+                              builder: (BuildContext context, Widget? child) {
+                                return MediaQuery(
+                                  data: MediaQuery.of(context).copyWith(
+                                    alwaysUse24HourFormat: false,
+                                  ),
+                                  child: Theme(
+                                    // Set colors for the clock to theme colors
+                                    data: ThemeData(
+                                      primaryColor: theme
+                                          .buttonTintColor, // Set clock hands color
+                                      // backgroundColor: theme
+                                      //     .backgroundGradientStart, // Set clock background color
+                                    ),
+                                    child: child!,
+                                  ),
+                                );
+                              });
+                          if (pickedTime != null) {
+                            setState(() {
+                              _selectedTime = pickedTime;
+                            });
+                          }
+                        },
+                        child: Text('Change Time',
+                            style: theme
+                                .headerFont), // Set text color to theme.headerFont
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16.0),
+                  Row(
+                    children: [
+                      Text(
+                        'Is this a Daily Prescription?',
+                        style: theme.headerFont,
+                      ),
+                      Switch(
+                        value: _isDaily,
+                        activeColor: theme.buttonTintColor,
+                        inactiveTrackColor: theme.tabBarSelectedItemColor,
+                        onChanged: (value) {
+                          setState(() {
+                            _isDaily = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16.0),
+                  Text(
+                    'Medicine Type',
+                    style: theme.headerFont,
+                  ),
+                  GroupButton<String>(
+                    options: GroupButtonOptions(
+                        selectedColor: theme.buttonTintColor),
+                    buttons: const ['Pill', 'Tablet', 'Syrup', 'Vitamin'],
+                    isRadio: true,
+                    onSelected: (selected, index, isSelected) {
+                      setState(() {
+                        _selectedType = selected;
+                        _selectedUnit =
+                            _medicineTypeToUnit[_selectedType] ?? '';
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16.0),
+                  TextButton(
+                    onPressed: () {
+                      _addReminder(context);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          theme.buttonTintColor),
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        const EdgeInsets.symmetric(
+                            horizontal: 3.0), // Add padding to the sides
+                      ),
+                      minimumSize: MaterialStateProperty.all<Size>(
+                        const Size(double.infinity,
+                            40), // Set minimum size to fill width
+                      ),
+                    ),
+                    child: const Text('Save Reminder',
+                        style: TextStyle(
+                            color:
+                                Colors.white)), // Adjust text color as needed
+                  ),
+                ],
+              ),
             ),
           ),
         ),

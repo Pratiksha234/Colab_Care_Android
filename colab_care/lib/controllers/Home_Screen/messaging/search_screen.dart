@@ -9,8 +9,12 @@ import 'package:intl/intl.dart'; // Make sure to add 'intl' package in your pubs
 import 'package:timezone/timezone.dart' as tz;
 
 class SearchProviderScreen extends StatefulWidget {
+  const SearchProviderScreen({super.key});
+
   @override
-  _SearchProviderScreenState createState() => _SearchProviderScreenState();
+  State<StatefulWidget> createState() {
+    return _SearchProviderScreenState();
+  }
 }
 
 class _SearchProviderScreenState extends State<SearchProviderScreen> {
@@ -59,9 +63,11 @@ class _SearchProviderScreenState extends State<SearchProviderScreen> {
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.clear),
-              onPressed: () => searchController.clear(),
-            ),
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  searchController.clear();
+                  Navigator.of(context).pop();
+                }),
           ],
         ),
       ),

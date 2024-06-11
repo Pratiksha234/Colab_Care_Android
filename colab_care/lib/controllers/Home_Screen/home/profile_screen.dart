@@ -6,17 +6,20 @@ import 'package:colab_care/controllers/Login-Registration/signin_screen.dart';
 import 'package:colab_care/controllers/Themes/theme_manager.dart';
 import 'package:colab_care/database_access.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
+// import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() {
+    return _ProfileScreenState();
+  }
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
@@ -43,10 +46,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     newEmail = DatabaseUtils.convertToHyphenSeparatedEmail(userEmail);
     newEmail = "${newEmail}_profile_picture";
     print(newEmail);
-    Reference ref = firebase_storage.FirebaseStorage.instance
-        .ref()
-        .child('images/$newEmail.jpg');
-    final data = await ref.getData();
+    // Reference ref = firebase_storage.FirebaseStorage.instance
+    //     .ref()
+    //     .child('images/$newEmail.jpg');
+    // final data = await ref.getData();
   }
 
   void logout(BuildContext context) async {
@@ -97,25 +100,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeNotifier>(context).currentTheme;
 
-    // Assuming 'theme.backgroundImage' is the path to your theme image
     final String backgroundImage = theme.backgroundImage;
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Text('Profile', style: theme.navbarFont),
+        iconTheme: const IconThemeData(
+          color: Colors.white, //change your color here
         ),
+        title: const Text('Profile'),
+        centerTitle: false,
+        backgroundColor: theme.tabBarBackgroundColor,
         titleTextStyle: const TextStyle(
           color: Colors.white,
           fontSize: 28,
         ),
-        centerTitle: false,
-        titleSpacing: 0,
       ),
+      backgroundColor: theme.backgroundColor,
       body: Stack(
         children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  theme.backgroundGradientStart,
+                  theme.backgroundGradientStop,
+                ],
+              ),
+            ),
+          ),
           // Theme photo in the background at the top
           Positioned(
             top: 0,
@@ -209,7 +223,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => DailyCheckInConfigScreen()),
+                            builder: (context) =>
+                                const DailyCheckInConfigScreen(),
+                          ),
                         );
                       },
                     ),

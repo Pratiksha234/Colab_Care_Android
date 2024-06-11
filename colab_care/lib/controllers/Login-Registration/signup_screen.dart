@@ -1,17 +1,17 @@
-import 'package:flutter/foundation.dart';
-
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../../../views/reusable_widgets.dart';
+
+import 'package:flutter/foundation.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:image_picker/image_picker.dart';
+
+import 'package:colab_care/views/reusable_widgets.dart';
 import 'package:colab_care/exports.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({super.key});
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
@@ -45,21 +45,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _emailTextController.text);
       UserData newUser = UserData(
         uid: uid,
-        first_name: _firstNameTextController.text,
-        last_name: _lastNameTextController.text,
+        firstName: _firstNameTextController.text,
+        lastName: _lastNameTextController.text,
         email: safeEmail,
-        user_role: 'Patient',
+        userRole: 'Patient',
         token: 'android',
       );
       Map<String, dynamic> newUserMap = newUser.toJson();
 
       await _saveUserDataToDatabase(uid, newUserMap);
       await _saveUserDataToAllUsers(newUser, newUserMap);
-      String new_email =
+      String newEmail =
           DatabaseUtils.convertToHyphenSeparatedEmail(newUser.email);
       await UserData.saveUserDataToSharedPreferences(newUser);
       await _uploadImage(
-          new_email, newUser.email); // Upload the image after saving user data
+          newEmail, newUser.email); // Upload the image after saving user data
 
       if (kDebugMode) {
         print("Navigating to HomeScreen");
@@ -67,7 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const TabBarScreen()),
       );
     } catch (error) {
       if (kDebugMode) {
@@ -157,7 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       await storageRef.putFile(imageFile!);
 
-      final downloadUrl = await storageRef.getDownloadURL();
+      // final downloadUrl = await storageRef.getDownloadURL();
 
       // Save the download URL to SharedPreferences
       // SharedPreferences prefs = await SharedPreferences.getInstance();

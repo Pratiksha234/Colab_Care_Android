@@ -1,4 +1,5 @@
 import 'package:colab_care/exports.dart';
+import 'goals_database_manager.dart';
 
 class GoalsProvider extends ChangeNotifier {
   final List<Goal> _goals = [];
@@ -6,18 +7,11 @@ class GoalsProvider extends ChangeNotifier {
 
   List<Goal> get goals => _goals;
 
+  final GoalsDatabaseManager _dbManager = GoalsDatabaseManager();
+
   Future<void> fetchGoalsOnce() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String currentUserEmail = prefs.getString('email') ?? '';
-    currentUserEmail =
-        DatabaseUtils.convertToHyphenSeparatedEmail(currentUserEmail);
-    if (!_isFetched && currentUserEmail.isNotEmpty) {
-      final DatabaseReference goalsRef = FirebaseDatabase.instance
-          // ignore: deprecated_member_use
-          .reference()
-          .child('patient_data')
-          .child(currentUserEmail)
-          .child('goals');
+    if (!_isFetched) {
+      final DatabaseReference goalsRef = await _dbManager.getGoalsRef();
 
       goalsRef.onValue.listen((DatabaseEvent event) {
         final data = event.snapshot.value;
@@ -37,9 +31,8 @@ class GoalsProvider extends ChangeNotifier {
           });
           _isFetched = true;
           notifyListeners();
-          print('Goals fetched successfully.');
         } else {
-          print('No goals found.');
+          // print('No goals found.');
         }
       });
     }
@@ -51,109 +44,54 @@ class GoalsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<void> addGoal(
-  //     {required String title,
-  //     required String desc,
-  //     required String progress,
-  //     required String dueDate,
-  //     required String createdDate,
-  //     required bool completed}) async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String currentUserEmail = prefs.getString('email') ?? '';
-  //   currentUserEmail =
-  //       DatabaseUtils.convertToHyphenSeparatedEmail(currentUserEmail);
-  //   final DatabaseReference goalsRef = FirebaseDatabase.instance
-  //       .reference()
-  //       .child('patient_data')
-  //       .child(currentUserEmail)
-  //       .child('goals');
-  //   try {
-  //     // DatabaseReference newGoalRef = goalsRef.push();
-  //     // await newGoalRef.set({
-  //     //   'title': title,
-  //     //   'desc': desc,
-  //     //   'progress': progress,
-  //     //   'dueDate': dueDate,
-  //     //   'createdDate': createdDate,
-  //     //   'completed': completed,
-  //     // });
-  //     // _goals.add(Goal(
-  //     //   id: newGoalRef.key!,
-  //     //   title: title,
-  //     //   desc: desc,
-  //     //   progress: progress,
-  //     //   dueDate: dueDate,
-  //     //   createdDate: createdDate,
-  //     //   completed: completed,
-  //     // ));
-  //     notifyListeners();
-  //   } catch (error) {
-  //     print('Error adding goal: $error');
-  //   }
-  // }
-
-  Future<void> updateGoal(BuildContext context,
-      {required String id,
-      required String title,
-      required String desc,
-      required String progress,
-      required String dueDate,
-      required String createdDate,
-      required bool completed}) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String currentUserEmail = prefs.getString('email') ?? '';
-    currentUserEmail =
-        DatabaseUtils.convertToHyphenSeparatedEmail(currentUserEmail);
-    final DatabaseReference goalsRef = FirebaseDatabase.instance
-        .reference()
-        .child('patient_data')
-        .child(currentUserEmail)
-        .child('goals')
-        .child(id);
+  Future<void> addGoal(Goal goal) async {
+    final DatabaseReference goalsRef = await _dbManager.getGoalsRef();
+    final newGoalRef = goalsRef.push();
     try {
-      // await goalsRef.update({
-      //   'title': title,
-      //   'desc': desc,
-      //   'progress': progress,
-      //   'dueDate': dueDate,
-      //   'createdDate': createdDate,
-      //   'completed': completed,
-      // });
-      int index = _goals.indexWhere((goal) => goal.id == id);
+      await newGoalRef.set({
+        'goalId': newGoalRef.key,
+        'title': goal.title,
+        'desc': goal.desc,
+        'dueDate': goal.dueDate,
+        'createdDate': goal.createdDate,
+        'completed': goal.completed,
+        'progress': goal.progress,
+      });
+      notifyListeners();
+    } catch (error) {
+      // print('Error adding goal: $error');
+    }
+  }
+
+  Future<void> updateGoal(Goal goal) async {
+    final DatabaseReference goalRef = await _dbManager.getGoalRef(goal.id);
+    try {
+      await goalRef.update({
+        'title': goal.title,
+        'desc': goal.desc,
+        'progress': goal.progress,
+        'dueDate': goal.dueDate,
+        'createdDate': goal.createdDate,
+        'completed': goal.completed,
+      });
+      int index = _goals.indexWhere((g) => g.id == goal.id);
       if (index != -1) {
-        _goals[index] = Goal(
-          id: id,
-          title: title,
-          desc: desc,
-          progress: progress,
-          dueDate: dueDate,
-          createdDate: createdDate,
-          completed: completed,
-        );
+        _goals[index] = goal;
         notifyListeners();
       }
     } catch (error) {
-      print('Error updating goal: $error');
+      // print('Error updating goal: $error');
     }
   }
 
   Future<void> deleteGoal(String id) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String currentUserEmail = prefs.getString('email') ?? '';
-    currentUserEmail =
-        DatabaseUtils.convertToHyphenSeparatedEmail(currentUserEmail);
-    final DatabaseReference goalsRef = FirebaseDatabase.instance
-        .reference()
-        .child('patient_data')
-        .child(currentUserEmail)
-        .child('goals')
-        .child(id);
+    final DatabaseReference goalRef = await _dbManager.getGoalRef(id);
     try {
-      await goalsRef.remove();
+      await goalRef.remove();
       _goals.removeWhere((goal) => goal.id == id);
       notifyListeners();
     } catch (error) {
-      print('Error deleting goal: $error');
+      // print('Error deleting goal: $error');
     }
   }
 }

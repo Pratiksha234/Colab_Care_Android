@@ -36,15 +36,6 @@ class ThemeProtocol {
   });
 }
 
-class ThemeManager {
-  static ThemeData getDefaultTheme(ThemeProtocol themeData) {
-    return ThemeData(
-      primaryColor: themeData.backgroundGradientStart,
-      backgroundColor: themeData.backgroundColor,
-    );
-  }
-}
-
 class DefaultTheme extends ThemeProtocol {
   DefaultTheme()
       : super(
@@ -58,12 +49,23 @@ class DefaultTheme extends ThemeProtocol {
           headerColor: Colors.black,
           textColor: Colors.black,
           navbarFont: const TextStyle(
-              fontSize: 34, fontWeight: FontWeight.bold, color: Colors.black),
-          textFont: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
-          captionFont:
-              const TextStyle(fontSize: 14, fontWeight: FontWeight.w100),
+            fontSize: 34,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+          textFont: const TextStyle(
+            fontSize: 16,
+            color: Colors.black,
+          ),
+          captionFont: const TextStyle(
+            fontSize: 14,
+            color: Colors.black,
+          ),
           headerFont: const TextStyle(
-              fontSize: 20, fontWeight: FontWeight.w500, color: Colors.black),
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
           backgroundColor: Colors.white,
           backgroundImage: "assets/theme/default.jpg",
         );
@@ -73,7 +75,7 @@ class OceanicHarmonyTheme extends ThemeProtocol {
   OceanicHarmonyTheme()
       : super(
           backgroundGradientStart: const Color.fromRGBO(203, 228, 222, 1),
-          backgroundGradientStop: const Color.fromRGBO(203, 228, 222, 1),
+          backgroundGradientStop: const Color.fromARGB(255, 172, 212, 203),
           borderColor: const Color.fromRGBO(71, 223, 221, 1),
           buttonTintColor: const Color.fromARGB(255, 95, 168, 192),
           tabBarBackgroundColor: const Color.fromARGB(255, 15, 90, 115),
@@ -94,6 +96,7 @@ class OceanicHarmonyTheme extends ThemeProtocol {
           captionFont: const TextStyle(
             fontFamily: "Avenir-Light",
             fontSize: 14,
+            color: Color.fromRGBO(14, 131, 136, 1),
           ),
           headerFont: const TextStyle(
             fontFamily: "Avenir-Medium",
@@ -110,7 +113,7 @@ class BurgundyTwilightTheme extends ThemeProtocol {
       : super(
           backgroundGradientStart: const Color.fromRGBO(231, 204, 204, 1),
           backgroundGradientStop: const Color.fromRGBO(207, 181, 166, 1),
-          borderColor: Color.fromARGB(255, 188, 160, 167),
+          borderColor: const Color.fromARGB(255, 188, 160, 167),
           buttonTintColor: const Color.fromARGB(255, 153, 97, 123),
           tabBarBackgroundColor: const Color.fromARGB(255, 100, 56, 66),
           tabBarSelectedItemColor: Colors.white,
@@ -120,15 +123,17 @@ class BurgundyTwilightTheme extends ThemeProtocol {
           navbarFont: const TextStyle(
             fontFamily: "HelveticaNeue-CondensedBold",
             fontSize: 34,
-            color: Colors.black,
+            color: Color.fromARGB(255, 100, 56, 66),
           ),
           textFont: const TextStyle(
             fontFamily: "HelveticaNeue-Light",
             fontSize: 16,
+            color: Color.fromARGB(255, 100, 56, 66),
           ),
           captionFont: const TextStyle(
             fontFamily: "HelveticaNeue-Light",
             fontSize: 14,
+            color: Color.fromARGB(255, 100, 56, 66),
           ),
           headerFont: const TextStyle(
             fontFamily: "HelveticaNeue",
@@ -155,17 +160,16 @@ class SoothingFoliageTheme extends ThemeProtocol {
           navbarFont: const TextStyle(
             fontFamily: "AvenirNext-Bold",
             fontSize: 34,
-            color: Colors.black,
+            color: Color.fromRGBO(64, 82, 59, 1),
           ),
           textFont: const TextStyle(
-            fontFamily: "AvenirNext-Regular",
-            fontSize: 16,
-            color: Colors.white,
-          ),
+              fontFamily: "AvenirNext-Regular",
+              fontSize: 16,
+              color: Color.fromRGBO(98, 153, 102, 1)),
           captionFont: const TextStyle(
-            fontFamily: "AvenirNext-Regular",
-            fontSize: 14,
-          ),
+              fontFamily: "AvenirNext-Regular",
+              fontSize: 14,
+              color: Color.fromRGBO(98, 153, 102, 1)),
           headerFont: const TextStyle(
             fontFamily: "AvenirNext-DemiBold",
             fontSize: 20,
@@ -186,23 +190,27 @@ class VioletDawnTheme extends ThemeProtocol {
           tabBarBackgroundColor: const Color.fromRGBO(100, 92, 186, 1),
           tabBarSelectedItemColor: Colors.white,
           tabBarUnselectedItemColor: const Color.fromRGBO(192, 171, 228, 1),
-          headerColor: Color.fromARGB(255, 29, 29, 32),
+          headerColor: const Color.fromARGB(255, 29, 29, 32),
           textColor: const Color.fromRGBO(100, 92, 186, 1),
           navbarFont: const TextStyle(
             fontFamily: "Verdana-Bold",
             fontSize: 30,
+            color: Color.fromRGBO(100, 92, 186, 1),
           ),
           textFont: const TextStyle(
             fontFamily: "Verdana",
             fontSize: 14,
+            color: Color.fromRGBO(100, 92, 186, 1),
           ),
           captionFont: const TextStyle(
             fontFamily: "Verdana",
             fontSize: 12,
+            color: Color.fromRGBO(100, 92, 186, 1),
           ),
           headerFont: const TextStyle(
             fontFamily: "Verdana-Bold",
             fontSize: 20,
+            color: Color.fromRGBO(100, 92, 186, 1),
           ),
           backgroundColor: const Color.fromRGBO(207, 194, 238, 1),
           backgroundImage: "assets/theme/purple.jpg",
@@ -224,20 +232,20 @@ class RetroTheme extends ThemeProtocol {
           navbarFont: const TextStyle(
             fontSize: 34,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Color.fromRGBO(84, 113, 131, 1),
           ),
           textFont: const TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w100,
-            color: Colors.white,
+            color: Color.fromRGBO(84, 113, 131, 1),
           ),
           captionFont: const TextStyle(
             fontSize: 14,
-            fontWeight: FontWeight.w100,
+            color: Color.fromRGBO(84, 113, 131, 1),
           ),
           headerFont: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w500,
+            color: Color.fromRGBO(84, 113, 131, 1),
           ),
           backgroundColor: const Color.fromRGBO(194, 194, 194, 1),
           backgroundImage: "assets/theme/retro.jpg",
@@ -259,19 +267,22 @@ class SoftSandsTheme extends ThemeProtocol {
           navbarFont: const TextStyle(
             fontFamily: "TrebuchetMS-Bold",
             fontSize: 34,
-            color: Colors.black,
+            color: Color.fromRGBO(252, 112, 122, 1),
           ),
           textFont: const TextStyle(
             fontFamily: "TrebuchetMS",
             fontSize: 16,
+            color: Color.fromRGBO(252, 112, 122, 1),
           ),
           captionFont: const TextStyle(
             fontFamily: "TrebuchetMS",
             fontSize: 14,
+            color: Color.fromRGBO(252, 112, 122, 1),
           ),
           headerFont: const TextStyle(
             fontFamily: "TrebuchetMS-Bold",
             fontSize: 20,
+            color: Color.fromRGBO(252, 112, 122, 1),
           ),
           backgroundColor: const Color.fromRGBO(250, 250, 232, 1),
           backgroundImage: "assets/theme/softsands.jpg",
